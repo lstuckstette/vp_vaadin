@@ -6,9 +6,6 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.PropertySet;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
@@ -17,13 +14,11 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.ItemClickListener;
-import com.vaadin.ui.renderers.TextRenderer;
-import com.vaadin.v7.data.util.BeanItemContainer;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -46,8 +41,18 @@ public class MyUI extends UI {
 		timeTableData = new ArrayList<>();
 
 		VerticalLayout layout = new VerticalLayout();
-
+		layout.setMargin(true);
+		layout.setWidth("100%");
 		layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		// show dummy Navigation-Header
+
+		MenuBar menu = new MenuBar();
+		menu.addItem("Startseite", null, null);
+		menu.addItem("Login", null, null);
+		menu.addItem("Wunschzettel", null, null);
+		menu.addItem("Hilfe", null, null);
+		menu.setWidth("100%");
+		layout.addComponent(menu);
 
 		// username
 		TextField name = new TextField();
@@ -57,15 +62,15 @@ public class MyUI extends UI {
 
 		setupGridData();
 
-		Grid<TimeSlotRowContainer> grid = new Grid<>();
-		grid.setWidth("75%");
+		Grid<TimeSlotRowContainer> grid = new Grid<>("Periodische Abwesenheit bitte markieren:");
+		grid.setItems(timeTableData);
 		grid.addColumn(TimeSlotRowContainer::getTimeString).setId("time").setCaption("Uhrzeit");
 		grid.addColumn(TimeSlotRowContainer::getMonday).setId("monday").setCaption("Montag");
 		grid.addColumn(TimeSlotRowContainer::getTuesday).setId("tuesday").setCaption("Dienstag");
 		grid.addColumn(TimeSlotRowContainer::getWednesday).setId("wednesday").setCaption("Mittwoch");
 		grid.addColumn(TimeSlotRowContainer::getThursday).setId("thursday").setCaption("Donnerstag");
 		grid.addColumn(TimeSlotRowContainer::getFriday).setId("friday").setCaption("Freitag");
-		
+		grid.setWidth("50%");
 		grid.addItemClickListener(new ItemClickListener<TimeSlotRowContainer>() {
 
 			@Override
@@ -74,7 +79,7 @@ public class MyUI extends UI {
 				// TimeSlot element = (TimeSlot) col.getValueProvider();
 				TimeSlotRowContainer row = event.getItem();
 				TimeSlot ts;
-				
+
 				switch (col.getId()) {
 				case "monday":
 					ts = row.getMonday();
@@ -99,12 +104,10 @@ public class MyUI extends UI {
 				default:
 					ts = new TimeSlot(-1, -1);
 				}
-				//grid.markAsDirtyRecursive();
-				//Notification.show("Selected: " + ts.printInfo());
+				// grid.markAsDirtyRecursive();
+				// Notification.show("Selected: " + ts.printInfo());
 			}
 		});
-
-		grid.setItems(timeTableData);
 
 		layout.addComponent(grid);
 
@@ -113,7 +116,7 @@ public class MyUI extends UI {
 		button.addClickListener(e -> {
 			layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
 		});
-
+		// button.setWidth("100%");
 		layout.addComponents(button);
 
 		setContent(layout);
