@@ -2,6 +2,9 @@ package com.veraplan.teacherWishlist;
 
 import java.util.ArrayList;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -15,10 +18,15 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.ItemClickListener;
+import com.veraplan.teacherWishlist.Entities.Person;
+
+
+
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -38,6 +46,9 @@ public class MyUI extends UI {
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 
+		
+		testJPA();
+		
 		timeTableData = new ArrayList<>();
 
 		VerticalLayout layout = new VerticalLayout();
@@ -64,12 +75,18 @@ public class MyUI extends UI {
 
 		Grid<TimeSlotRowContainer> grid = new Grid<>("Periodische Abwesenheit bitte markieren:");
 		grid.setItems(timeTableData);
-		grid.addColumn(TimeSlotRowContainer::getTimeString).setId("time").setCaption("Uhrzeit");
-		grid.addColumn(TimeSlotRowContainer::getMonday).setId("monday").setCaption("Montag");
-		grid.addColumn(TimeSlotRowContainer::getTuesday).setId("tuesday").setCaption("Dienstag");
-		grid.addColumn(TimeSlotRowContainer::getWednesday).setId("wednesday").setCaption("Mittwoch");
-		grid.addColumn(TimeSlotRowContainer::getThursday).setId("thursday").setCaption("Donnerstag");
-		grid.addColumn(TimeSlotRowContainer::getFriday).setId("friday").setCaption("Freitag");
+		grid.addColumn(TimeSlotRowContainer::getTimeString).setId("time").setCaption("Uhrzeit")
+				.setStyleGenerator(item -> "v-align-center");
+		grid.addColumn(TimeSlotRowContainer::getMonday).setId("monday").setCaption("Montag")
+				.setStyleGenerator(item -> "v-align-center");
+		grid.addColumn(TimeSlotRowContainer::getTuesday).setId("tuesday").setCaption("Dienstag")
+				.setStyleGenerator(item -> "v-align-center");
+		grid.addColumn(TimeSlotRowContainer::getWednesday).setId("wednesday").setCaption("Mittwoch")
+				.setStyleGenerator(item -> "v-align-center");
+		grid.addColumn(TimeSlotRowContainer::getThursday).setId("thursday").setCaption("Donnerstag")
+				.setStyleGenerator(item -> "v-align-center");
+		grid.addColumn(TimeSlotRowContainer::getFriday).setId("friday").setCaption("Freitag")
+				.setStyleGenerator(item -> "v-align-center");
 		grid.setWidth("50%");
 		grid.addItemClickListener(new ItemClickListener<TimeSlotRowContainer>() {
 
@@ -120,6 +137,16 @@ public class MyUI extends UI {
 		layout.addComponents(button);
 
 		setContent(layout);
+	}
+
+	private void testJPA() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mysqlconn");
+		EntityManager em = emf.createEntityManager();
+		int id=1;
+		Person p1 = (Person) em.find(Person.class,id);
+		Notification.show("JPA: found person "+ p1.getFirstName() + " "+p1.getLastName()+ "with ID "+id);
+		
+		
 	}
 
 	private void setupGridData() {
