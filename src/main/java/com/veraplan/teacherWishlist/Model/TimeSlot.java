@@ -1,4 +1,4 @@
-package com.veraplan.teacherWishlist;
+package com.veraplan.teacherWishlist.Model;
 
 public class TimeSlot {
 

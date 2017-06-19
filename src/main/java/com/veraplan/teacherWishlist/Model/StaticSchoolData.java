@@ -1,15 +1,15 @@
-package com.veraplan.teacherWishlist;
+package com.veraplan.teacherWishlist.Model;
 
 public final class StaticSchoolData {
 
-	static final int TIMESLOT_COUNT = 9;
+	public static final int TIMESLOT_COUNT = 9;
 
 	private StaticSchoolData() {
 
 	}
 	// src: http://www.hhg-du.de/Stundenplanzeiten.188.0.html
 
-	static TimeSlotTime getTimeSlotStartTime(int timeSlotNumber) {
+	public static TimeSlotTime getTimeSlotStartTime(int timeSlotNumber) {
 		switch (timeSlotNumber) {
 		case 1:
 			return new TimeSlotTime(8, 0);
@@ -37,7 +37,7 @@ public final class StaticSchoolData {
 
 	}
 
-	static TimeSlotTime getTimeSlotEndTime(int timeSlotNumber) {
+	public static TimeSlotTime getTimeSlotEndTime(int timeSlotNumber) {
 		switch (timeSlotNumber) {
 		case 1:
 			return new TimeSlotTime(8, 45);
@@ -65,7 +65,7 @@ public final class StaticSchoolData {
 
 	}
 
-	static String getTimeString(int timeSlotNumber) {
+	public static String getTimeString(int timeSlotNumber) {
 		if(timeSlotNumber > TIMESLOT_COUNT || timeSlotNumber < 1){
 			return "error on TimeSlot.";
 		}
