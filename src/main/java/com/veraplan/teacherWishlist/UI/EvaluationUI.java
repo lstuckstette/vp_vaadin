@@ -1,4 +1,4 @@
-package com.veraplan.teacherWishlist;
+package com.veraplan.teacherWishlist.UI;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,15 +24,16 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.ItemClickListener;
+import com.vaadin.ui.renderers.ButtonRenderer;
 import com.veraplan.teacherWishlist.Entities.Person;
 import com.veraplan.teacherWishlist.Model.StaticSchoolData;
 import com.veraplan.teacherWishlist.Model.TimeSlot;
 import com.veraplan.teacherWishlist.Model.TimeSlotRowContainer;
 import com.veraplan.teacherWishlist.Model.VacationItem;
+
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -45,7 +46,7 @@ import com.veraplan.teacherWishlist.Model.VacationItem;
  */
 @SuppressWarnings("serial")
 @Theme("mytheme")
-public class MyUI extends UI {
+public class EvaluationUI extends UI {
 
 	private ArrayList<TimeSlotRowContainer> periodicTimeTableData;
 	private ArrayList<VacationItem> vacationList;
@@ -55,6 +56,7 @@ public class MyUI extends UI {
 	private Label headerVacation, headerPeriodic, pageHeader;
 	private Grid<TimeSlotRowContainer> periodicGrid;
 	private Grid<VacationItem> vacationGrid;
+	private Button confirmButton;
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
@@ -90,16 +92,23 @@ public class MyUI extends UI {
 		headerPeriodic = new Label("<b>Periodische Abwesenheiten:</b>", ContentMode.HTML);
 		masterLayout.addComponent(headerPeriodic);
 
-		setupGridData();
-		buildGrid();
+		// spacing:
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 
-		/*
-		 * // confirm Button with listener Button button = new
-		 * Button("Absenden"); button.addClickListener(e -> {
-		 * masterLayout.addComponent(new Label("Thanks " + name.getValue() +
-		 * ", it works!")); }); // button.setWidth("100%");
-		 * masterLayout.addComponents(button);
-		 */
+		setupPeriodicGridData();
+		buildPeriodicGrid();
+
+		// spacing:
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+
+		// confirm Button that links to persist
+		confirmButton = new Button("Absenden");
+		confirmButton.addClickListener(e -> {
+			persistData();
+		}); // button.setWidth("100%");
+		masterLayout.addComponents(confirmButton);
+
 		setContent(masterLayout);
 	}
 
@@ -128,11 +137,11 @@ public class MyUI extends UI {
 				Notification.show("Start-/Enddatum darf nicht leer sein!");
 			} else {
 				vacationList.add(new VacationItem(start, end, comment));
-				//clear selection:
+				// clear selection:
 				vacationStartDate.clear();
 				vacationEndDate.clear();
 				vacationComment.clear();
-				//update List:
+				// update List:
 				vacationGrid.getDataProvider().refreshAll();
 			}
 		});
@@ -149,20 +158,35 @@ public class MyUI extends UI {
 		masterLayout.addComponent(vacationHorizontalLayout);
 		// spacing:
 		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-		
-		//show Grid containing chosen Elements
-		vacationGrid = new Grid<VacationItem>();
+
+		// show Grid containing chosen Elements
+		vacationGrid = new Grid<VacationItem>("Liste der eingetragenen Urlaubswünsche");
 		vacationGrid.setItems(vacationList);
 		vacationGrid.addColumn(VacationItem::getStartDate).setId("start").setCaption("Urlaubsbeginn");
 		vacationGrid.addColumn(VacationItem::getEndDate).setId("end").setCaption("Urlaubsende");
 		vacationGrid.addColumn(VacationItem::getComment).setId("comment").setCaption("Kommentar");
-		
+		vacationGrid.addColumn(vacationitem -> "Entfernen", new ButtonRenderer<>(clickEvent -> {
+			vacationList.remove(clickEvent.getItem());
+			vacationGrid.setItems(vacationList);
+		})).setCaption("Aktion");
+		vacationGrid.setWidth("50%");
+		vacationGrid.setHeightByRows(4);
+
 		masterLayout.addComponent(vacationGrid);
 	}
 
-	private void buildGrid() {
+	private void buildPeriodicGrid() {
+		
+		HorizontalLayout periodicHorizontalLayout = new HorizontalLayout();
+		periodicHorizontalLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		
+		periodicHorizontalLayout.setWidth("50%");
+		TextArea periodicComment = new TextArea("Kommentar");
+		periodicComment.setWidth("100%");
+		
 		periodicGrid = new Grid<>("Periodische Abwesenheit -  bitte einzelne Felder markieren:");
 		periodicGrid.setItems(periodicTimeTableData);
+		periodicGrid.setHeightByRows(StaticSchoolData.TIMESLOT_COUNT);
 		periodicGrid.addColumn(TimeSlotRowContainer::getTimeString).setId("time").setCaption("Uhrzeit")
 				.setStyleGenerator(item -> "v-align-center");
 		periodicGrid.addColumn(TimeSlotRowContainer::getMonday).setId("monday").setCaption("Montag")
@@ -175,13 +199,14 @@ public class MyUI extends UI {
 				.setStyleGenerator(item -> "v-align-center");
 		periodicGrid.addColumn(TimeSlotRowContainer::getFriday).setId("friday").setCaption("Freitag")
 				.setStyleGenerator(item -> "v-align-center");
-		periodicGrid.setWidth("50%");
+		periodicGrid.setWidth("100%");
+		
 		periodicGrid.addItemClickListener(new ItemClickListener<TimeSlotRowContainer>() {
 
 			@Override
 			public void itemClick(ItemClick<TimeSlotRowContainer> event) {
 				Column<TimeSlotRowContainer, ?> col = event.getColumn();
-				// TimeSlot element = (TimeSlot) col.getValueProvider();
+				
 				TimeSlotRowContainer row = event.getItem();
 				TimeSlot ts;
 
@@ -204,7 +229,7 @@ public class MyUI extends UI {
 					break;
 				case "friday":
 					ts = row.getFriday();
-					ts.toggleSelected();
+					 ts.toggleSelected();
 					break;
 				default:
 					ts = new TimeSlot(-1, -1);
@@ -213,8 +238,14 @@ public class MyUI extends UI {
 				// Notification.show("Selected: " + ts.printInfo());
 			}
 		});
-
-		masterLayout.addComponent(periodicGrid);
+		
+		//periodicComment.setHeight("400");
+		System.out.println(periodicGrid.getHeight());
+		periodicHorizontalLayout.addComponents(periodicGrid, periodicComment);
+		periodicHorizontalLayout.setExpandRatio(periodicGrid, 5);
+		periodicHorizontalLayout.setExpandRatio(periodicComment, 1);
+		
+		masterLayout.addComponent(periodicHorizontalLayout);
 	}
 
 	private void buildMenu() {
@@ -227,16 +258,7 @@ public class MyUI extends UI {
 		masterLayout.addComponent(menu);
 	}
 
-	private void testJPA() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mysqlconn");
-		EntityManager em = emf.createEntityManager();
-		int id = 1;
-		Person p1 = (Person) em.find(Person.class, id);
-		Notification.show("JPA: found person " + p1.getFirstName() + " " + p1.getLastName() + "with ID " + id);
-
-	}
-
-	private void setupGridData() {
+	private void setupPeriodicGridData() {
 
 		// populate:
 		for (int i = 1; i <= StaticSchoolData.TIMESLOT_COUNT; i++) {
@@ -245,8 +267,16 @@ public class MyUI extends UI {
 
 	}
 
+	private void persistData() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mysqlconn");
+		EntityManager em = emf.createEntityManager();
+		int id = 1;
+		Person p1 = (Person) em.find(Person.class, id);
+		Notification.show("JPA: found person " + p1.getFirstName() + " " + p1.getLastName() + "with ID " + id);
+	}
+
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+	@VaadinServletConfiguration(ui = EvaluationUI.class, productionMode = false)
 	public static class MyUIServlet extends VaadinServlet {
 	}
 }
