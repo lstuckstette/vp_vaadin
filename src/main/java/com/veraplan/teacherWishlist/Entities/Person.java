@@ -21,7 +21,7 @@ public class Person implements Serializable {
 	private String address;
 
 	@Temporal(TemporalType.DATE)
-	private Date birthdate; 
+	private Date birthdate;
 
 	private String city;
 
@@ -42,6 +42,10 @@ public class Person implements Serializable {
 	//bi-directional many-to-one association to Teacher
 	@ManyToOne
 	private Teacher teacher;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	private User user;
 
 	public Person() {
 	}
@@ -124,6 +128,14 @@ public class Person implements Serializable {
 
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

@@ -22,8 +22,6 @@ public class User implements Serializable {
 	@Column(name="create_time")
 	private Timestamp createTime;
 
-	private int messageHistory_idMessageHistory;
-
 	private String notificationEmail;
 
 	private String password;
@@ -35,6 +33,10 @@ public class User implements Serializable {
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="user2")
 	private List<Message> messages2;
+
+	//bi-directional many-to-one association to Person
+	@OneToMany(mappedBy="user")
+	private List<Person> persons;
 
 	//bi-directional many-to-one association to Role
 	@ManyToOne
@@ -62,14 +64,6 @@ public class User implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
-	}
-
-	public int getMessageHistory_idMessageHistory() {
-		return this.messageHistory_idMessageHistory;
-	}
-
-	public void setMessageHistory_idMessageHistory(int messageHistory_idMessageHistory) {
-		this.messageHistory_idMessageHistory = messageHistory_idMessageHistory;
 	}
 
 	public String getNotificationEmail() {
@@ -130,6 +124,28 @@ public class User implements Serializable {
 		messages2.setUser2(null);
 
 		return messages2;
+	}
+
+	public List<Person> getPersons() {
+		return this.persons;
+	}
+
+	public void setPersons(List<Person> persons) {
+		this.persons = persons;
+	}
+
+	public Person addPerson(Person person) {
+		getPersons().add(person);
+		person.setUser(this);
+
+		return person;
+	}
+
+	public Person removePerson(Person person) {
+		getPersons().remove(person);
+		person.setUser(null);
+
+		return person;
 	}
 
 	public Role getRole() {

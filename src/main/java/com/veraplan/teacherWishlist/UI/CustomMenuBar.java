@@ -4,14 +4,16 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.MenuBar;
 
 @SuppressWarnings("serial")
-public class EvaluationMenuBar extends MenuBar {
+public class CustomMenuBar extends MenuBar {
 
 	private Navigator navigator;
 	MenuItem login;
+	MenuItem register;
 	MenuItem evaluation;
 	MenuItem administration;
+	
 
-	public EvaluationMenuBar(Navigator navigator) {
+	public CustomMenuBar(Navigator navigator) {
 		super();
 		this.navigator = navigator;
 		login = this.addItem("Login", null, null);
@@ -20,7 +22,14 @@ public class EvaluationMenuBar extends MenuBar {
 				navigator.navigateTo("login");
 			}
 		});
-
+		
+		register= this.addItem("Registrieren", null, null);
+		register.setCommand(selectedItem -> {
+			if (navigator != null) {
+				navigator.navigateTo("register");
+			}
+		});
+		
 		evaluation = this.addItem("Erhebungsbogen", null, null);
 		evaluation.setCommand(selectedItem -> {
 			if (navigator != null) {

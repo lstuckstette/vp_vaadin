@@ -41,7 +41,7 @@ public class LoginView extends CustomComponent implements View, ClickListener {
 		layout.setSizeFull();
 		layout.setMargin(true);
 		layout.setSpacing(true);
-		layout.addComponent(new EvaluationMenuBar(navigator));
+		layout.addComponent(new CustomMenuBar(navigator));
 
 		layout.addComponent(usernameField);
 		layout.addComponent(passwordField);

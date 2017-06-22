@@ -55,7 +55,7 @@ public class EvaluationView extends CustomComponent implements View {
 				masterLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
 
 				// show dummy Navigation-Header
-				masterLayout.addComponent(new EvaluationMenuBar(getUI().getNavigator()));
+				masterLayout.addComponent(new CustomMenuBar(getUI().getNavigator()));
 
 				pageHeader = new Label("<h1>Erhebungsbogen zur Unterrichtsverteilung</h1>", ContentMode.HTML);
 				masterLayout.addComponent(pageHeader);
