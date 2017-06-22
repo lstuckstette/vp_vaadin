@@ -3,16 +3,13 @@ package com.veraplan.teacherWishlist.UI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ContentMode; 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -28,11 +25,14 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.renderers.ButtonRenderer;
-import com.veraplan.teacherWishlist.Entities.Person;
 import com.veraplan.teacherWishlist.Model.StaticSchoolData;
 import com.veraplan.teacherWishlist.Model.TimeSlot;
 import com.veraplan.teacherWishlist.Model.TimeSlotRowContainer;
 import com.veraplan.teacherWishlist.Model.VacationItem;
+import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceManager;
+
+
+
 
 
 /**
@@ -45,6 +45,7 @@ import com.veraplan.teacherWishlist.Model.VacationItem;
  * initialize non-component functionality.
  */
 @SuppressWarnings("serial")
+//@CDIUI("")
 @Theme("mytheme")
 public class EvaluationUI extends UI {
 
@@ -240,7 +241,6 @@ public class EvaluationUI extends UI {
 		});
 		
 		//periodicComment.setHeight("400");
-		System.out.println(periodicGrid.getHeight());
 		periodicHorizontalLayout.addComponents(periodicGrid, periodicComment);
 		periodicHorizontalLayout.setExpandRatio(periodicGrid, 5);
 		periodicHorizontalLayout.setExpandRatio(periodicComment, 1);
@@ -268,11 +268,8 @@ public class EvaluationUI extends UI {
 	}
 
 	private void persistData() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mysqlconn");
-		EntityManager em = emf.createEntityManager();
-		int id = 1;
-		Person p1 = (Person) em.find(Person.class, id);
-		Notification.show("JPA: found person " + p1.getFirstName() + " " + p1.getLastName() + "with ID " + id);
+		new EvaluationPersistenceManager();
+		
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

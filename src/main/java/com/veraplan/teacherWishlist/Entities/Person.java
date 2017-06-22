@@ -10,12 +10,12 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table
 @NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int idPerson;
 
 	private String address;
@@ -30,6 +30,18 @@ public class Person implements Serializable {
 	private String gender;
 
 	private String lastName;
+
+	//bi-directional many-to-one association to Staff
+	@ManyToOne
+	private Staff staff;
+
+	//bi-directional many-to-one association to Student
+	@ManyToOne
+	private Student student;
+
+	//bi-directional many-to-one association to Teacher
+	@ManyToOne
+	private Teacher teacher;
 
 	public Person() {
 	}
@@ -88,6 +100,30 @@ public class Person implements Serializable {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public Staff getStaff() {
+		return this.staff;
+	}
+
+	public void setStaff(Staff staff) {
+		this.staff = staff;
+	}
+
+	public Student getStudent() {
+		return this.student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	public Teacher getTeacher() {
+		return this.teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 
 }

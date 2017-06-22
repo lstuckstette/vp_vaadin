@@ -1,5 +1,5 @@
 package com.veraplan.teacherWishlist.Model;
-
+ 
 public class TimeSlotTime {
 
 	private int minutes;

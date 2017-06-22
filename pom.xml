@@ -5,7 +5,7 @@
 
 	<groupId>com.veraplan</groupId>
 	<artifactId>teacherWishlist</artifactId>
-	<packaging>war</packaging>
+	<packaging>war</packaging> 
 	<version>0.0.1-SNAPSHOT</version>
 	<name>teacherWishlist</name>
 
@@ -74,20 +74,14 @@
 			<version>5.1.18</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>eclipselink</artifactId>
 			<version>2.6.5-RC2</version>
 		</dependency>
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
-			<scope>provided</scope>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.2.10.Final</version>
 		</dependency>
 	</dependencies>
 

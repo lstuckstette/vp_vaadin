@@ -1,6 +1,6 @@
 package com.veraplan.teacherWishlist.Model;
 
-import java.time.LocalDate;
+import java.time.LocalDate; 
 
 public class VacationItem {
 

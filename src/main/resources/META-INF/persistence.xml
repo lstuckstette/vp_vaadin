@@ -5,9 +5,25 @@
 	version="2.0">
 
 	<persistence-unit name="mysqlconn" transaction-type="RESOURCE_LOCAL">
-		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		
+		<class>com.veraplan.teacherWishlist.Entities.Absence</class>
+		<class>com.veraplan.teacherWishlist.Entities.Class</class>
+		<class>com.veraplan.teacherWishlist.Entities.Event</class>
+		<class>com.veraplan.teacherWishlist.Entities.Lesson</class>
+		<class>com.veraplan.teacherWishlist.Entities.Message</class>
+		<class>com.veraplan.teacherWishlist.Entities.Periodicabsencetimeslot</class>
 		<class>com.veraplan.teacherWishlist.Entities.Person</class>
+		<class>com.veraplan.teacherWishlist.Entities.Role</class>
+		<class>com.veraplan.teacherWishlist.Entities.Room</class>
+		<class>com.veraplan.teacherWishlist.Entities.RoomFeature</class>
+		<class>com.veraplan.teacherWishlist.Entities.Staff</class>
+		<class>com.veraplan.teacherWishlist.Entities.Student</class>
+		<class>com.veraplan.teacherWishlist.Entities.StudentWishlist</class>
+		<class>com.veraplan.teacherWishlist.Entities.Subject</class>
+		<class>com.veraplan.teacherWishlist.Entities.Teacher</class>
+		<class>com.veraplan.teacherWishlist.Entities.TeacherWishlist</class>
+		<class>com.veraplan.teacherWishlist.Entities.User</class>
+		<class>com.veraplan.teacherWishlist.Entities.UserSetting</class>
+		<!--  <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> -->
 		
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		
@@ -16,8 +32,11 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mydb" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="root" />
-			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			
+			<property name="eclipselink.ddl-generation" value="create-tables" />
 			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+			<property name="eclipselink.target-database" value="MySQL"/>
+			<property name="eclipselink.logging.level" value="FINE"/>
 		</properties>
 		
 	</persistence-unit>
