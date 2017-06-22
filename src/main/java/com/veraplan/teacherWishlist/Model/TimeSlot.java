@@ -18,7 +18,7 @@ public class TimeSlot {
 		return weekday;
 	}
 
-	public int getTimeSlotNumber() {
+	public int getTimeSlotNumber() { 
 		return timeSlotNumber;
 	}
 

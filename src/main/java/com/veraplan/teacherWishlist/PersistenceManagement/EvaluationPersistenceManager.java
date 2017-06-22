@@ -22,8 +22,8 @@ public class EvaluationPersistenceManager {
 		setupDummyData();
 	}
 
-	public void setupDummyData() {
-		
+	public void setupDummyData() { 
+		int dummyPersonID;
 		// Create person if not exists
 		Query personCheckQuery = entityManager
 				.createQuery("SELECT p FROM Person p WHERE p.firstName = :firstName AND p.lastName = :lastName")
@@ -35,13 +35,14 @@ public class EvaluationPersistenceManager {
 			entityManager.getTransaction().begin();
 			
 			Person dummyPerson = new Person();
-			//dummyPerson.setIdPerson(1);
 			dummyPerson.setFirstName("Max");
 			dummyPerson.setLastName("Mustermann");
 			
 			entityManager.persist(dummyPerson);
 			
 			entityManager.getTransaction().commit();
+			
+			dummyPersonID = dummyPerson.getIdPerson();
 			System.out.println("persisted");
 			//entityManager.close(); 
 		} else {

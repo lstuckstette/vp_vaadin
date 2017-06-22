@@ -15,7 +15,7 @@ public final class StaticSchoolData {
 			return new TimeSlotTime(8, 0);
 		case 2:
 			return new TimeSlotTime(8, 50);
-		// kleine Pause
+		// kleine Pause 
 		case 3:
 			return new TimeSlotTime(9, 50);
 		case 4:
@@ -23,7 +23,7 @@ public final class StaticSchoolData {
 		// grosse Pause
 		case 5:
 			return new TimeSlotTime(11, 45);
-		case 6:
+		case 6: 
 			return new TimeSlotTime(12, 35);
 		case 7:
 			return new TimeSlotTime(13, 35);// = Mittagspause

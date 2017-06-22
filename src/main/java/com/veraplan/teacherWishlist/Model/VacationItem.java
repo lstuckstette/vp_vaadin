@@ -12,7 +12,7 @@ public class VacationItem {
 
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.comment = comment;
+		this.comment = comment; 
 	}
 
 	public LocalDate getStartDate() {

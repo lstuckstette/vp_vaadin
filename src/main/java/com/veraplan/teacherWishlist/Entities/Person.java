@@ -21,7 +21,7 @@ public class Person implements Serializable {
 	private String address;
 
 	@Temporal(TemporalType.DATE)
-	private Date birthdate;
+	private Date birthdate; 
 
 	private String city;
 
