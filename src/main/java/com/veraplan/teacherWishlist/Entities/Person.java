@@ -31,6 +31,8 @@ public class Person implements Serializable {
 
 	private String lastName;
 
+	private int postalCode;
+
 	//bi-directional many-to-one association to Staff
 	@ManyToOne
 	private Staff staff;
@@ -104,6 +106,14 @@ public class Person implements Serializable {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public int getPostalCode() {
+		return this.postalCode;
+	}
+
+	public void setPostalCode(int postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public Staff getStaff() {

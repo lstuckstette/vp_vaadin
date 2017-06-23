@@ -1,35 +1,40 @@
 package com.veraplan.teacherWishlist.UI;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.MenuBar;
+import com.veraplan.teacherWishlist.Model.CurrentUser;
 
 @SuppressWarnings("serial")
 public class CustomMenuBar extends MenuBar {
 
-	private Navigator navigator;
-	MenuItem login;
-	MenuItem register;
-	MenuItem evaluation;
-	MenuItem administration;
-	
+	private MenuItem login;
+	private MenuItem register;
+	private MenuItem evaluation;
+	private MenuItem administration;
+	private MenuItem loginIndicator;
+	private CurrentUser user;
 
-	public CustomMenuBar(Navigator navigator) {
+	public CustomMenuBar(Navigator navigator, CurrentUser user) {
 		super();
-		this.navigator = navigator;
+
+		this.user = user;
 		login = this.addItem("Login", null, null);
 		login.setCommand(selectedItem -> {
 			if (navigator != null) {
 				navigator.navigateTo("login");
+
 			}
 		});
-		
-		register= this.addItem("Registrieren", null, null);
+
+		register = this.addItem("Registrieren", null, null);
 		register.setCommand(selectedItem -> {
 			if (navigator != null) {
 				navigator.navigateTo("register");
+
 			}
 		});
-		
+
 		evaluation = this.addItem("Erhebungsbogen", null, null);
 		evaluation.setCommand(selectedItem -> {
 			if (navigator != null) {
@@ -43,8 +48,22 @@ public class CustomMenuBar extends MenuBar {
 				navigator.navigateTo("administration");
 			}
 		});
-		
+
+		loginIndicator = this.addItem("", null, null);
+		loginIndicator.setIcon(VaadinIcons.USER);
+
+		setLoginIndicatorCaption();
 		this.setWidth("100%");
+
+	}
+
+	public void setLoginIndicatorCaption() {
+		if (user.isLoggedIn()) {
+			loginIndicator.setText("eingeloggt als: " + user.getPerson().getFirstName() + " "
+					+user.getPerson().getLastName());
+		} else {
+			loginIndicator.setText("nicht eingeloggt.");
+		}
 
 	}
 

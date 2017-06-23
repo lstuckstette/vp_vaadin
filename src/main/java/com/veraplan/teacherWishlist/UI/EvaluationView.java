@@ -3,6 +3,8 @@ package com.veraplan.teacherWishlist.UI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -16,12 +18,13 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.renderers.ButtonRenderer;
+import com.veraplan.teacherWishlist.Entities.Teacher;
+import com.veraplan.teacherWishlist.Model.CurrentUser;
 import com.veraplan.teacherWishlist.Model.StaticSchoolData;
 import com.veraplan.teacherWishlist.Model.TimeSlot;
 import com.veraplan.teacherWishlist.Model.TimeSlotRowContainer;
@@ -31,10 +34,14 @@ import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceM
 @SuppressWarnings("serial")
 @CDIView("evaluation")
 public class EvaluationView extends CustomComponent implements View {
+	
+	@Inject
+	EvaluationPersistenceManager epm;
+	@Inject
+	CurrentUser user;
 
 	private ArrayList<TimeSlotRowContainer> periodicTimeTableData;
 	private ArrayList<VacationItem> vacationList;
-	private MenuBar menu;
 	private VerticalLayout masterLayout;
 	private HorizontalLayout vacationHorizontalLayout;
 	private Label headerVacation, headerPeriodic, pageHeader;
@@ -53,9 +60,9 @@ public class EvaluationView extends CustomComponent implements View {
 				masterLayout.setMargin(true);
 				masterLayout.setWidth("100%");
 				masterLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-
+				setCompositionRoot(masterLayout);
 				// show dummy Navigation-Header
-				masterLayout.addComponent(new CustomMenuBar(getUI().getNavigator()));
+				masterLayout.addComponent(new CustomMenuBar(getUI().getNavigator(),user));
 
 				pageHeader = new Label("<h1>Erhebungsbogen zur Unterrichtsverteilung</h1>", ContentMode.HTML);
 				masterLayout.addComponent(pageHeader);
@@ -93,7 +100,7 @@ public class EvaluationView extends CustomComponent implements View {
 				}); // button.setWidth("100%");
 				masterLayout.addComponents(confirmButton);
 
-				setCompositionRoot(masterLayout);
+				
 		
 	}
 	
@@ -232,17 +239,6 @@ public class EvaluationView extends CustomComponent implements View {
 		masterLayout.addComponent(periodicHorizontalLayout);
 	}
 
-	private void buildMenu() {
-		menu = new MenuBar();
-		menu.addItem("Startseite", null, null);
-		menu.addItem("Login", null, null);
-		menu.addItem("Wunschzettel", null, null);
-		menu.addItem("Administration", null, null);
-		
-		menu.setWidth("100%");
-		masterLayout.addComponent(menu);
-	}
-
 	private void setupPeriodicGridData() {
 
 		// populate:
@@ -253,7 +249,8 @@ public class EvaluationView extends CustomComponent implements View {
 	}
 
 	private void persistData() {
-		new EvaluationPersistenceManager();
+		Teacher currentTeacher = new Teacher();
+		epm.persistEvaluation(currentTeacher, periodicTimeTableData, vacationList);
 		
 	}
 
