@@ -1,6 +1,9 @@
 package com.veraplan.teacherWishlist.Model;
 
-import java.time.LocalDate; 
+import java.sql.Date;
+import java.time.LocalDate;
+
+import com.veraplan.teacherWishlist.Entities.Absence; 
 
 public class VacationItem {
 
@@ -37,6 +40,14 @@ public class VacationItem {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public Absence toAbsenceEntity(){
+		Absence newAbsence = new Absence();
+		newAbsence.setComment(this.getComment());
+		newAbsence.setStart(Date.valueOf(this.getStartDate()));
+		newAbsence.setEnd(Date.valueOf(this.getEndDate()));
+		return newAbsence;
 	}
 
 }

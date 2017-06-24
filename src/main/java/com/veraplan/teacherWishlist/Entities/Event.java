@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -29,14 +28,10 @@ public class Event implements Serializable {
 
 	private Time startTime;
 
-	//bi-directional many-to-one association to Room
+	//uni-directional many-to-one association to Room
 	@ManyToOne
 	@JoinColumn(name="roomFK")
 	private Room room;
-
-	//bi-directional many-to-one association to Lesson
-	@OneToMany(mappedBy="event")
-	private List<Lesson> lessons;
 
 	public Event() {
 	}
@@ -87,28 +82,6 @@ public class Event implements Serializable {
 
 	public void setRoom(Room room) {
 		this.room = room;
-	}
-
-	public List<Lesson> getLessons() {
-		return this.lessons;
-	}
-
-	public void setLessons(List<Lesson> lessons) {
-		this.lessons = lessons;
-	}
-
-	public Lesson addLesson(Lesson lesson) {
-		getLessons().add(lesson);
-		lesson.setEvent(this);
-
-		return lesson;
-	}
-
-	public Lesson removeLesson(Lesson lesson) {
-		getLessons().remove(lesson);
-		lesson.setEvent(null);
-
-		return lesson;
 	}
 
 }

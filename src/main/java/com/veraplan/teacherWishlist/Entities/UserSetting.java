@@ -2,7 +2,6 @@ package com.veraplan.teacherWishlist.Entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -24,10 +23,6 @@ public class UserSetting implements Serializable {
 	private byte option2;
 
 	private byte option3;
-
-	//bi-directional many-to-one association to User
-	@OneToMany(mappedBy="userSetting")
-	private List<User> users;
 
 	public UserSetting() {
 	}
@@ -62,28 +57,6 @@ public class UserSetting implements Serializable {
 
 	public void setOption3(byte option3) {
 		this.option3 = option3;
-	}
-
-	public List<User> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
-	public User addUser(User user) {
-		getUsers().add(user);
-		user.setUserSetting(this);
-
-		return user;
-	}
-
-	public User removeUser(User user) {
-		getUsers().remove(user);
-		user.setUserSetting(null);
-
-		return user;
 	}
 
 }

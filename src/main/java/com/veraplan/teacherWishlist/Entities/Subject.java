@@ -2,7 +2,6 @@ package com.veraplan.teacherWishlist.Entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -21,10 +20,6 @@ public class Subject implements Serializable {
 	private String abbreviation;
 
 	private String name;
-
-	//bi-directional many-to-one association to Lesson
-	@OneToMany(mappedBy="subject")
-	private List<Lesson> lessons;
 
 	public Subject() {
 	}
@@ -51,28 +46,6 @@ public class Subject implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Lesson> getLessons() {
-		return this.lessons;
-	}
-
-	public void setLessons(List<Lesson> lessons) {
-		this.lessons = lessons;
-	}
-
-	public Lesson addLesson(Lesson lesson) {
-		getLessons().add(lesson);
-		lesson.setSubject(this);
-
-		return lesson;
-	}
-
-	public Lesson removeLesson(Lesson lesson) {
-		getLessons().remove(lesson);
-		lesson.setSubject(null);
-
-		return lesson;
 	}
 
 }

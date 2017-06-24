@@ -20,7 +20,7 @@ public class RoomFeature implements Serializable {
 
 	private String feature;
 
-	//uni-directional many-to-one association to Room
+	//bi-directional many-to-one association to Room
 	@ManyToOne
 	@JoinColumn(name="roomFK")
 	private Room room;

@@ -18,16 +18,12 @@ public class Lesson implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idClass;
 
-	//bi-directional many-to-one association to Class
-	@OneToMany(mappedBy="lesson")
-	private List<Class> clazzs;
-
-	//bi-directional many-to-one association to Event
+	//uni-directional many-to-one association to Event
 	@ManyToOne
 	@JoinColumn(name="eventFK")
 	private Event event;
 
-	//bi-directional many-to-one association to Subject
+	//uni-directional many-to-one association to Subject
 	@ManyToOne
 	@JoinColumn(name="subjectFK")
 	private Subject subject;
@@ -45,28 +41,6 @@ public class Lesson implements Serializable {
 
 	public void setIdClass(int idClass) {
 		this.idClass = idClass;
-	}
-
-	public List<Class> getClazzs() {
-		return this.clazzs;
-	}
-
-	public void setClazzs(List<Class> clazzs) {
-		this.clazzs = clazzs;
-	}
-
-	public Class addClazz(Class clazz) {
-		getClazzs().add(clazz);
-		clazz.setLesson(this);
-
-		return clazz;
-	}
-
-	public Class removeClazz(Class clazz) {
-		getClazzs().remove(clazz);
-		clazz.setLesson(null);
-
-		return clazz;
 	}
 
 	public Event getEvent() {

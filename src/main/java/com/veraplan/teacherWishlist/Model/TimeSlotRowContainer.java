@@ -1,5 +1,10 @@
 package com.veraplan.teacherWishlist.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.veraplan.teacherWishlist.Entities.Periodicabsencetimeslot;
+
 public class TimeSlotRowContainer {
 
 	private int timeSlotNumber;
@@ -20,7 +25,7 @@ public class TimeSlotRowContainer {
 	public String getTimeString() {
 
 		return StaticSchoolData.getTimeString(this.timeSlotNumber);
-		
+
 	}
 
 	public TimeSlot getMonday() {
@@ -41,6 +46,29 @@ public class TimeSlotRowContainer {
 
 	public TimeSlot getFriday() {
 		return friday;
+	}
+
+	public List<TimeSlot> getTimeSlots() {
+		ArrayList<TimeSlot> returnList = new ArrayList<>();
+		returnList.add(this.getMonday());
+		returnList.add(this.getTuesday());
+		returnList.add(this.getWednesday());
+		returnList.add(this.getThursday());
+		returnList.add(this.getFriday());
+
+		return returnList;
+	}
+
+	public static List<Periodicabsencetimeslot> toPeriodicabsencetimeslotList(List<TimeSlotRowContainer> inputList){
+		ArrayList<Periodicabsencetimeslot> returnList = new ArrayList<>();
+		for(TimeSlotRowContainer tsrc : inputList){
+			for(TimeSlot ts : tsrc.getTimeSlots()){
+				if(ts.getSelected()){
+					returnList.add(ts.toPeriodicabsencetimeslot());
+				}
+			}
+		}
+		return returnList;
 	}
 
 }

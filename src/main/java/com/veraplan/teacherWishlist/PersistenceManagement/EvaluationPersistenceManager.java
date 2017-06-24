@@ -14,9 +14,12 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import com.vaadin.cdi.UIScoped;
+import com.veraplan.teacherWishlist.Entities.Absence;
+import com.veraplan.teacherWishlist.Entities.Periodicabsencetimeslot;
 import com.veraplan.teacherWishlist.Entities.Person;
 import com.veraplan.teacherWishlist.Entities.Role;
 import com.veraplan.teacherWishlist.Entities.Teacher;
+import com.veraplan.teacherWishlist.Entities.Teacherwishlist;
 import com.veraplan.teacherWishlist.Entities.User;
 import com.veraplan.teacherWishlist.Entities.UserSetting;
 import com.veraplan.teacherWishlist.Model.RegistrationField;
@@ -86,21 +89,46 @@ public class EvaluationPersistenceManager {
 
 	}
 
-	public void persistEvaluation(Teacher currentTeacher, ArrayList<TimeSlotRowContainer> periodicAbsence,
-			ArrayList<VacationItem> absence) {
+	public void persistEvaluation(User currentUser, ArrayList<TimeSlotRowContainer> inputPeriodicAbsence,
+			ArrayList<VacationItem> inputVacation, String periodicAbsenceComment) {
 		// TODO: add conversion methods to TimeSlotRowContainer + VacationItem
 
 		// create new TeacherWishlist
-
+		Teacherwishlist twl = new Teacherwishlist();
+		twl.setPeriodicAbsenceComment(periodicAbsenceComment);
+		twl.setDate(new Timestamp(System.currentTimeMillis()));
 		// assign teacher to TeacherWishlist
+		twl.setTeacher(this.getTeacher(currentUser));
 
 		// map ArrayList<TimeSlotRowContainer> to single
 		// PeriodicabsenceTimeslots and add to TeacherWishlist
+		List<Periodicabsencetimeslot> periodicEntityList = TimeSlotRowContainer
+				.toPeriodicabsencetimeslotList(inputPeriodicAbsence);
+		for (Periodicabsencetimeslot pats : periodicEntityList) {
+			pats.setTeacherwishlist(twl);
+		}
+		twl.setPeriodicabsencetimeslots(periodicEntityList);
 
 		// map ArrayList<VacationItem> to single Absences and add to
-		// TeacherWishlist
+		ArrayList<Absence> vacationEntityList = new ArrayList<>();
+		for (VacationItem vi : inputVacation) {
+			Absence absence = vi.toAbsenceEntity();
+			absence.setTeacherwishlist(twl);
+			vacationEntityList.add(absence);
+		}
+		twl.setAbsences(vacationEntityList);
 
 		// persist all
+		entityManager.getTransaction().begin();
+		entityManager.persist(twl);
+		for (Periodicabsencetimeslot pats : twl.getPeriodicabsencetimeslots()) {
+			entityManager.persist(pats);
+		}
+		for (Absence absence : twl.getAbsences()) {
+			entityManager.persist(absence);
+		}
+		entityManager.getTransaction().commit();
+
 	}
 
 	public boolean registerUser(Map<RegistrationField, String> enteredData) {
@@ -217,7 +245,7 @@ public class EvaluationPersistenceManager {
 			return result.get(0);
 		}
 	}
- 
+
 	public Teacher getTeacher(User currentUser) {
 
 		return getPerson(currentUser).getTeacher();
@@ -225,8 +253,7 @@ public class EvaluationPersistenceManager {
 
 	public Person getPerson(User currentUser) {
 		TypedQuery<Person> getTeacherFromUser = entityManager
-				.createQuery("SELECT p FROM Person p WHERE p.user.idUserEmail = :userId",
-						Person.class)
+				.createQuery("SELECT p FROM Person p WHERE p.user.idUserEmail = :userId", Person.class)
 				.setParameter("userId", currentUser.getIdUserEmail());
 		List<Person> resultList = getTeacherFromUser.getResultList();
 		if (resultList.isEmpty()) {

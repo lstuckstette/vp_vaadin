@@ -1,4 +1,6 @@
-package com.veraplan.teacherWishlist.Model; 
+package com.veraplan.teacherWishlist.Model;
+
+import com.veraplan.teacherWishlist.Entities.Periodicabsencetimeslot;
 
 public class TimeSlot {
 
@@ -36,6 +38,14 @@ public class TimeSlot {
 
 	public String printInfo() {
 		return "TS-Info: WeekDay '" + weekday + "' TimeString '" + StaticSchoolData.getTimeString(timeSlotNumber) + "'";
+	}
+	
+	public Periodicabsencetimeslot toPeriodicabsencetimeslot(){
+		Periodicabsencetimeslot pats = new Periodicabsencetimeslot();
+		pats.setTimeSlotNumber(this.getTimeSlotNumber());
+		pats.setWeekday(this.getWeekday());
+		
+		return pats;
 	}
 
 }

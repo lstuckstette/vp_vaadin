@@ -22,9 +22,9 @@ public class Room implements Serializable {
 
 	private String name;
 
-	//bi-directional many-to-one association to Event
+	//bi-directional many-to-one association to RoomFeature
 	@OneToMany(mappedBy="room")
-	private List<Event> events;
+	private List<RoomFeature> roomFeatures;
 
 	public Room() {
 	}
@@ -53,26 +53,26 @@ public class Room implements Serializable {
 		this.name = name;
 	}
 
-	public List<Event> getEvents() {
-		return this.events;
+	public List<RoomFeature> getRoomFeatures() {
+		return this.roomFeatures;
 	}
 
-	public void setEvents(List<Event> events) {
-		this.events = events;
+	public void setRoomFeatures(List<RoomFeature> roomFeatures) {
+		this.roomFeatures = roomFeatures;
 	}
 
-	public Event addEvent(Event event) {
-		getEvents().add(event);
-		event.setRoom(this);
+	public RoomFeature addRoomFeature(RoomFeature roomFeature) {
+		getRoomFeatures().add(roomFeature);
+		roomFeature.setRoom(this);
 
-		return event;
+		return roomFeature;
 	}
 
-	public Event removeEvent(Event event) {
-		getEvents().remove(event);
-		event.setRoom(null);
+	public RoomFeature removeRoomFeature(RoomFeature roomFeature) {
+		getRoomFeatures().remove(roomFeature);
+		roomFeature.setRoom(null);
 
-		return event;
+		return roomFeature;
 	}
 
 }

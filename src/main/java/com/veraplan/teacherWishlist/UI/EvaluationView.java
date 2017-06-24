@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import com.vaadin.cdi.CDIView;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.CustomComponent; 
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ItemClick;
@@ -35,7 +37,7 @@ import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceM
 @SuppressWarnings("serial")
 @CDIView("evaluation")
 public class EvaluationView extends CustomComponent implements View {
-	
+
 	@Inject
 	EvaluationPersistenceManager epm;
 	@Inject
@@ -44,89 +46,112 @@ public class EvaluationView extends CustomComponent implements View {
 	private ArrayList<TimeSlotRowContainer> periodicTimeTableData;
 	private ArrayList<VacationItem> vacationList;
 	private VerticalLayout masterLayout;
-	
-		private VerticalLayout vacationLayout;
-		private VerticalLayout periodicLayout;
-	
-	private HorizontalLayout vacationHorizontalLayout;
-	private Label headerVacation, headerPeriodic, pageHeader;
+
+	private VerticalLayout vacationLayout;
+	private FormLayout periodicLayout;
+
+	private FormLayout vacationFormLayout;
+	private Label pageHeader;
 	private Grid<TimeSlotRowContainer> periodicGrid;
 	private Grid<VacationItem> vacationGrid;
 	private Button confirmButton;
-	
-		private Panel vacationPanel;
-		private Panel periodicPanel;
-	
-	
+	private TextArea periodicComment;
+
+	private Panel vacationPanel;
+	private Panel periodicPanel;
+
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// initialize Containers
-				periodicTimeTableData = new ArrayList<>();
-				vacationList = new ArrayList<>();
-				// setup Master-Layout
-				masterLayout = new VerticalLayout();
-				masterLayout.setMargin(true);
-				masterLayout.setWidth("100%");
-				masterLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-				setCompositionRoot(masterLayout);
-				// show dummy Navigation-Header
-				masterLayout.addComponent(new CustomMenuBar(getUI().getNavigator(),user));
+		periodicTimeTableData = new ArrayList<>();
+		vacationList = new ArrayList<>();
+		// setup Master-Layout
+		masterLayout = new VerticalLayout();
+		masterLayout.setMargin(true);
+		masterLayout.setSizeFull();
+		masterLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		setCompositionRoot(masterLayout);
+		// show dummy Navigation-Header
+		masterLayout.addComponent(new CustomMenuBar(getUI().getNavigator(), user));
 
-				pageHeader = new Label("<h1>Erhebungsbogen zur Unterrichtsverteilung</h1>", ContentMode.HTML);
-				masterLayout.addComponent(pageHeader);
+		pageHeader = new Label("<h1>Erhebungsbogen zur Unterrichtsverteilung</h1>", ContentMode.HTML);
+		masterLayout.addComponent(pageHeader);
 
-				// spacing:
-				masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		// spacing:
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 
-				// show specific Vacation Chooser:
-				buildVacationChooser();
-
-				// <--
-
-				// spacing:
-				masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-				masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-
-				// periodic absence
-				headerPeriodic = new Label("<b>Periodische Abwesenheiten:</b>", ContentMode.HTML);
-				masterLayout.addComponent(headerPeriodic);
-
-				// spacing:
-				masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-
-				setupPeriodicGridData();
-				buildPeriodicGrid();
-
-				// spacing:
-				masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-				masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-
-				// confirm Button that links to persist
-				confirmButton = new Button("Absenden");
-				confirmButton.addClickListener(e -> {
-					persistData();
-				}); // button.setWidth("100%");
-				masterLayout.addComponents(confirmButton);
-
-				
+		// show specific Vacation Chooser:
 		
+		vacationPanel = new Panel("Spezielle Urlaubswünsche:");
+		masterLayout.addComponent(vacationPanel);
+		masterLayout.setComponentAlignment(vacationPanel, Alignment.TOP_CENTER);
+		vacationPanel.setWidth(null);
+		
+		vacationLayout = new VerticalLayout();
+		vacationLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		vacationLayout.setMargin(true);
+		vacationLayout.setSpacing(true);
+		buildVacationChooser();
+		
+		vacationPanel.setContent(vacationLayout);
+		// <--
+
+		// spacing:
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		
+
+		// show periodic Absence Grid:
+		
+		periodicPanel = new Panel("Periodische Abwesenheiten:");
+		masterLayout.addComponent(periodicPanel);
+		masterLayout.setComponentAlignment(periodicPanel, Alignment.TOP_CENTER);
+		periodicPanel.setWidth(null);
+		
+		periodicLayout = new FormLayout();
+		periodicLayout.setMargin(true);
+		periodicLayout.setSpacing(true);
+		setupPeriodicGridData();
+		buildPeriodicGrid();
+		
+		periodicPanel.setContent(periodicLayout);
+
+		// spacing:
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+
+		// confirm Button that links to persist
+		confirmButton = new Button("Alles Absenden");
+		confirmButton.addClickListener(e -> {
+			//checkLogin
+			if(user.isLoggedIn()){
+				persistData();
+			} else {
+				Notification.show("Sie sind nicht eingeloggt!", Notification.Type.ERROR_MESSAGE);
+				getUI().getNavigator().navigateTo("login");
+			}
+			
+		});
+		masterLayout.addComponent(confirmButton);
+
 	}
-	
+
 	private void buildVacationChooser() {
-		headerVacation = new Label("<b>Spezifische Urlaubswünsche:</b>", ContentMode.HTML);
-		masterLayout.addComponent(headerVacation);
 
-		vacationHorizontalLayout = new HorizontalLayout();
-		vacationHorizontalLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-
-		Label vacationStartCaption = new Label("Urlaubsanfang");
-		Label vacationEndCaption = new Label("Urlaubsende");
-		DateField vacationStartDate = new DateField();
+		vacationFormLayout = new FormLayout();
+		vacationFormLayout.setMargin(true);
+		DateField vacationStartDate = new DateField("Urlaubsanfang");
+		vacationStartDate.setIcon(VaadinIcons.DATE_INPUT);
+		vacationStartDate.setRequiredIndicatorVisible(true);
 		vacationStartDate.setDateFormat("dd.MM.yyyy");
-		DateField vacationEndDate = new DateField();
+		
+		DateField vacationEndDate = new DateField("Urlaubsende");
+		vacationEndDate.setIcon(VaadinIcons.DATE_INPUT);
+		vacationEndDate.setRequiredIndicatorVisible(true);
 		vacationEndDate.setDateFormat("dd.MM.yyyy");
 
 		TextArea vacationComment = new TextArea("Kommentar");
+		vacationComment.setIcon(VaadinIcons.TEXT_INPUT);
+		
 		Button vacationAddButton = new Button("Zur Liste hinzufügen");
 		vacationAddButton.addClickListener(e -> {
 			LocalDate start = vacationStartDate.getValue();
@@ -146,18 +171,13 @@ public class EvaluationView extends CustomComponent implements View {
 			}
 		});
 
-		VerticalLayout vacationStartLayout = new VerticalLayout();
-		vacationStartLayout.addComponents(vacationStartCaption, vacationStartDate);
+		vacationFormLayout.addComponents(vacationStartDate,vacationEndDate,vacationComment,vacationAddButton);
 
-		VerticalLayout vacationEndLayout = new VerticalLayout();
-		vacationEndLayout.addComponents(vacationEndCaption, vacationEndDate);
-
-		vacationHorizontalLayout.addComponents(vacationStartLayout, vacationEndLayout, vacationComment,
-				vacationAddButton);
-
-		masterLayout.addComponent(vacationHorizontalLayout);
+		vacationLayout.addComponent(vacationFormLayout);
+		vacationLayout.setComponentAlignment(vacationFormLayout, Alignment.TOP_CENTER);
+		
 		// spacing:
-		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		vacationLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 
 		// show Grid containing chosen Elements
 		vacationGrid = new Grid<VacationItem>("Liste der eingetragenen Urlaubswünsche");
@@ -169,22 +189,21 @@ public class EvaluationView extends CustomComponent implements View {
 			vacationList.remove(clickEvent.getItem());
 			vacationGrid.setItems(vacationList);
 		})).setCaption("Aktion");
-		vacationGrid.setWidth("50%");
+		
 		vacationGrid.setHeightByRows(4);
 
-		masterLayout.addComponent(vacationGrid);
+		vacationLayout.addComponent(vacationGrid);
+		// spacing:
+		vacationLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 	}
 
 	private void buildPeriodicGrid() {
+
+
 		
-		HorizontalLayout periodicHorizontalLayout = new HorizontalLayout();
-		periodicHorizontalLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-		
-		periodicHorizontalLayout.setWidth("50%");
-		TextArea periodicComment = new TextArea("Kommentar");
-		periodicComment.setWidth("100%");
-		
-		periodicGrid = new Grid<>("Periodische Abwesenheit -  bitte einzelne Felder markieren:");
+		periodicComment = new TextArea("Kommentar");
+
+		periodicGrid = new Grid<>("Bitte einzelne Felder markieren:");
 		periodicGrid.setItems(periodicTimeTableData);
 		periodicGrid.setHeightByRows(StaticSchoolData.TIMESLOT_COUNT);
 		periodicGrid.addColumn(TimeSlotRowContainer::getTimeString).setId("time").setCaption("Uhrzeit")
@@ -199,14 +218,14 @@ public class EvaluationView extends CustomComponent implements View {
 				.setStyleGenerator(item -> "v-align-center");
 		periodicGrid.addColumn(TimeSlotRowContainer::getFriday).setId("friday").setCaption("Freitag")
 				.setStyleGenerator(item -> "v-align-center");
-		periodicGrid.setWidth("100%");
+		
+		periodicGrid.setWidth("800");
 		
 		periodicGrid.addItemClickListener(new ItemClickListener<TimeSlotRowContainer>() {
 
 			@Override
 			public void itemClick(ItemClick<TimeSlotRowContainer> event) {
 				Column<TimeSlotRowContainer, ?> col = event.getColumn();
-				
 				TimeSlotRowContainer row = event.getItem();
 				TimeSlot ts;
 
@@ -229,22 +248,21 @@ public class EvaluationView extends CustomComponent implements View {
 					break;
 				case "friday":
 					ts = row.getFriday();
-					 ts.toggleSelected();
+					ts.toggleSelected();
 					break;
 				default:
 					ts = new TimeSlot(-1, -1);
 				}
-				// grid.markAsDirtyRecursive();
-				// Notification.show("Selected: " + ts.printInfo());
 			}
 		});
-		
-		//periodicComment.setHeight("400");
-		periodicHorizontalLayout.addComponents(periodicGrid, periodicComment);
-		periodicHorizontalLayout.setExpandRatio(periodicGrid, 5);
-		periodicHorizontalLayout.setExpandRatio(periodicComment, 1);
-		
-		masterLayout.addComponent(periodicHorizontalLayout);
+
+		// spacing:
+		//periodicLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+
+		periodicLayout.addComponents(periodicGrid, periodicComment);
+		//periodicLayout.setExpandRatio(periodicGrid, 5);
+		//periodicLayout.setExpandRatio(periodicComment, 1);
+
 	}
 
 	private void setupPeriodicGridData() {
@@ -257,25 +275,9 @@ public class EvaluationView extends CustomComponent implements View {
 	}
 
 	private void persistData() {
-		Teacher currentTeacher = new Teacher();
-		epm.persistEvaluation(currentTeacher, periodicTimeTableData, vacationList);
 		
+		epm.persistEvaluation(user.getUser(), periodicTimeTableData, vacationList,periodicComment.getValue());
+
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-

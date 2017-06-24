@@ -24,12 +24,12 @@ public class User implements Serializable {
 
 	private String password;
 
-	//bi-directional many-to-one association to Role
+	//uni-directional many-to-one association to Role
 	@ManyToOne
 	@JoinColumn(name="roleFK")
 	private Role role;
 
-	//bi-directional many-to-one association to UserSetting
+	//uni-directional many-to-one association to UserSetting
 	@ManyToOne
 	@JoinColumn(name="usersettingFK")
 	private UserSetting userSetting;

@@ -73,7 +73,7 @@ public class LoginView extends CustomComponent implements View, ClickListener {
 
 		// spacing:
 		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-
+		//----------------------------------------------------------------------------------
 		loginPanel = new Panel("Bitte folgende Daten angeben:");
 		masterLayout.addComponent(loginPanel);
 		masterLayout.setSizeFull();

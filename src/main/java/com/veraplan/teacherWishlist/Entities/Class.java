@@ -20,7 +20,7 @@ public class Class implements Serializable {
 
 	private String name;
 
-	//bi-directional many-to-one association to Lesson
+	//uni-directional many-to-one association to Lesson
 	@ManyToOne
 	@JoinColumn(name="lessonFK")
 	private Lesson lesson;

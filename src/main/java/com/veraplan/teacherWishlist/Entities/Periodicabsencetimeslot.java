@@ -19,7 +19,7 @@ public class Periodicabsencetimeslot implements Serializable {
 
 	private int timeSlotNumber;
 
-	private byte weekday;
+	private int weekday;
 
 	//bi-directional many-to-one association to Teacherwishlist
 	@ManyToOne
@@ -45,11 +45,11 @@ public class Periodicabsencetimeslot implements Serializable {
 		this.timeSlotNumber = timeSlotNumber;
 	}
 
-	public byte getWeekday() {
+	public int getWeekday() {
 		return this.weekday;
 	}
 
-	public void setWeekday(byte weekday) {
+	public void setWeekday(int weekday) {
 		this.weekday = weekday;
 	}
 
