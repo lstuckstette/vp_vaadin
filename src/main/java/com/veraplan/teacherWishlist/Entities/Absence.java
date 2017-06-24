@@ -15,7 +15,7 @@ public class Absence implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idAbsence;
 
 	private String comment;
@@ -26,10 +26,10 @@ public class Absence implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date start;
 
-	//bi-directional many-to-one association to TeacherWishlist
+	//bi-directional many-to-one association to Teacherwishlist
 	@ManyToOne
-	@JoinColumn(name="Teacher_Wishlist_idTeacher_Wishlist")
-	private TeacherWishlist teacherWishlist;
+	@JoinColumn(name="teacherwishlistFK")
+	private Teacherwishlist teacherwishlist;
 
 	public Absence() {
 	}
@@ -66,12 +66,12 @@ public class Absence implements Serializable {
 		this.start = start;
 	}
 
-	public TeacherWishlist getTeacherWishlist() {
-		return this.teacherWishlist;
+	public Teacherwishlist getTeacherwishlist() {
+		return this.teacherwishlist;
 	}
 
-	public void setTeacherWishlist(TeacherWishlist teacherWishlist) {
-		this.teacherWishlist = teacherWishlist;
+	public void setTeacherwishlist(Teacherwishlist teacherwishlist) {
+		this.teacherwishlist = teacherwishlist;
 	}
 
 }

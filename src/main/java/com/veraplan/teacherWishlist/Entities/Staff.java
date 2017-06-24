@@ -3,7 +3,6 @@ package com.veraplan.teacherWishlist.Entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -16,15 +15,11 @@ public class Staff implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idStaff;
 
 	@Temporal(TemporalType.DATE)
 	private Date hireDate;
-
-	//bi-directional many-to-one association to Person
-	@OneToMany(mappedBy="staff")
-	private List<Person> persons;
 
 	public Staff() {
 	}
@@ -43,28 +38,6 @@ public class Staff implements Serializable {
 
 	public void setHireDate(Date hireDate) {
 		this.hireDate = hireDate;
-	}
-
-	public List<Person> getPersons() {
-		return this.persons;
-	}
-
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
-
-	public Person addPerson(Person person) {
-		getPersons().add(person);
-		person.setStaff(this);
-
-		return person;
-	}
-
-	public Person removePerson(Person person) {
-		getPersons().remove(person);
-		person.setStaff(null);
-
-		return person;
 	}
 
 }

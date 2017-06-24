@@ -15,7 +15,7 @@ public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idPerson;
 
 	private String address;
@@ -33,20 +33,24 @@ public class Person implements Serializable {
 
 	private int postalCode;
 
-	//bi-directional many-to-one association to Staff
+	//uni-directional many-to-one association to Staff
 	@ManyToOne
+	@JoinColumn(name="staffFK")
 	private Staff staff;
 
-	//bi-directional many-to-one association to Student
+	//uni-directional many-to-one association to Student
 	@ManyToOne
+	@JoinColumn(name="studentFK")
 	private Student student;
 
-	//bi-directional many-to-one association to Teacher
+	//uni-directional many-to-one association to Teacher
 	@ManyToOne
+	@JoinColumn(name="teacherFK")
 	private Teacher teacher;
 
-	//bi-directional many-to-one association to User
+	//uni-directional many-to-one association to User
 	@ManyToOne
+	@JoinColumn(name="userFK")
 	private User user;
 
 	public Person() {

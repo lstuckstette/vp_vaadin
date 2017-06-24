@@ -16,28 +16,16 @@ public class Student implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idStudent;
 
 	@Temporal(TemporalType.DATE)
 	private Date enrollmentDate;
 
-	//bi-directional many-to-one association to Person
-	@OneToMany(mappedBy="student")
-	private List<Person> persons;
-
-	//bi-directional many-to-many association to Class
-	@ManyToMany
-	@JoinTable(
-		name="student_has_class"
-		, joinColumns={
-			@JoinColumn(name="Student_idStudent")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="Class_idClass")
-			}
-		)
-	private List<Class> clazzs;
+	//bi-directional many-to-one association to Class
+	@ManyToOne
+	@JoinColumn(name="classFK")
+	private Class clazz;
 
 	//bi-directional many-to-one association to StudentWishlist
 	@OneToMany(mappedBy="student")
@@ -62,34 +50,12 @@ public class Student implements Serializable {
 		this.enrollmentDate = enrollmentDate;
 	}
 
-	public List<Person> getPersons() {
-		return this.persons;
+	public Class getClazz() {
+		return this.clazz;
 	}
 
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
-
-	public Person addPerson(Person person) {
-		getPersons().add(person);
-		person.setStudent(this);
-
-		return person;
-	}
-
-	public Person removePerson(Person person) {
-		getPersons().remove(person);
-		person.setStudent(null);
-
-		return person;
-	}
-
-	public List<Class> getClazzs() {
-		return this.clazzs;
-	}
-
-	public void setClazzs(List<Class> clazzs) {
-		this.clazzs = clazzs;
+	public void setClazz(Class clazz) {
+		this.clazz = clazz;
 	}
 
 	public List<StudentWishlist> getStudentWishlists() {

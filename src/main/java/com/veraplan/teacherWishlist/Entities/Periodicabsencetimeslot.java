@@ -14,17 +14,17 @@ public class Periodicabsencetimeslot implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idPeriodicAbsenceTimeslot;
 
 	private int timeSlotNumber;
 
 	private byte weekday;
 
-	//bi-directional many-to-one association to TeacherWishlist
+	//bi-directional many-to-one association to Teacherwishlist
 	@ManyToOne
-	@JoinColumn(name="Teacher_Wishlist_idTeacher_Wishlist")
-	private TeacherWishlist teacherWishlist;
+	@JoinColumn(name="teacherwishlistFK")
+	private Teacherwishlist teacherwishlist;
 
 	public Periodicabsencetimeslot() {
 	}
@@ -53,12 +53,12 @@ public class Periodicabsencetimeslot implements Serializable {
 		this.weekday = weekday;
 	}
 
-	public TeacherWishlist getTeacherWishlist() {
-		return this.teacherWishlist;
+	public Teacherwishlist getTeacherwishlist() {
+		return this.teacherwishlist;
 	}
 
-	public void setTeacherWishlist(TeacherWishlist teacherWishlist) {
-		this.teacherWishlist = teacherWishlist;
+	public void setTeacherwishlist(Teacherwishlist teacherwishlist) {
+		this.teacherwishlist = teacherwishlist;
 	}
 
 }

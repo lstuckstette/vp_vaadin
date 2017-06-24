@@ -17,7 +17,7 @@ public class Event implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idEvent;
 
 	@Temporal(TemporalType.DATE)
@@ -28,6 +28,11 @@ public class Event implements Serializable {
 	private String eventName;
 
 	private Time startTime;
+
+	//bi-directional many-to-one association to Room
+	@ManyToOne
+	@JoinColumn(name="roomFK")
+	private Room room;
 
 	//bi-directional many-to-one association to Lesson
 	@OneToMany(mappedBy="event")
@@ -74,6 +79,14 @@ public class Event implements Serializable {
 
 	public void setStartTime(Time startTime) {
 		this.startTime = startTime;
+	}
+
+	public Room getRoom() {
+		return this.room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 
 	public List<Lesson> getLessons() {

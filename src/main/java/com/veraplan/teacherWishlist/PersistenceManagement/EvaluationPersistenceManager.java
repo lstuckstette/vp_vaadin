@@ -1,6 +1,5 @@
 package com.veraplan.teacherWishlist.PersistenceManagement;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,23 +52,23 @@ public class EvaluationPersistenceManager {
 			dummyUser.setIdUserEmail("test@test.com");
 			dummyUser.setNotificationEmail("test2@test.com");
 			dummyUser.setPassword("test");
-			dummyUser.setCreateTime(new Timestamp(1483228801000L));
+			dummyUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			dummyUser.setRole(getRole("admin"));
 			UserSetting userSetting = new UserSetting();
 			dummyUser.setUserSetting(userSetting);
 
 			// create new Teacher
 			Teacher dummyTeacher = new Teacher();
-			dummyTeacher.setHireDate(new Date(1483228801000L));
+			dummyTeacher.setHireDate(new Timestamp(System.currentTimeMillis()));
 
 			// create new Person
 			Person dummyPerson = new Person();
 			dummyPerson.setFirstName("Max");
 			dummyPerson.setLastName("Mustermann");
 			dummyPerson.setUser(dummyUser);
-			ArrayList<Person> tList = new ArrayList<>();
-			tList.add(dummyPerson);
-			dummyTeacher.setPersons(tList);
+			// ArrayList<Person> tList = new ArrayList<>();
+			// tList.add(dummyPerson);
+			// dummyTeacher.setPersons(tList);
 			dummyPerson.setTeacher(dummyTeacher);
 
 			// persist above
@@ -89,8 +88,8 @@ public class EvaluationPersistenceManager {
 
 	public void persistEvaluation(Teacher currentTeacher, ArrayList<TimeSlotRowContainer> periodicAbsence,
 			ArrayList<VacationItem> absence) {
-		//TODO: add conversion methods to TimeSlotRowContainer + VacationItem
-		
+		// TODO: add conversion methods to TimeSlotRowContainer + VacationItem
+
 		// create new TeacherWishlist
 
 		// assign teacher to TeacherWishlist
@@ -168,9 +167,9 @@ public class EvaluationPersistenceManager {
 		}
 
 		newPerson.setUser(newUser);
-		ArrayList<Person> tList = new ArrayList<>();
-		tList.add(newPerson);
-		newTeacher.setPersons(tList);
+		// ArrayList<Person> tList = new ArrayList<>();
+		// tList.add(newPerson);
+		// newTeacher.setPersons(tList);
 		newPerson.setTeacher(newTeacher);
 
 		// persist generated Entities and commit
@@ -185,7 +184,6 @@ public class EvaluationPersistenceManager {
 
 		return true;
 	}
-	
 
 	public boolean checkUserLogin(String email, String password) {
 
@@ -201,10 +199,8 @@ public class EvaluationPersistenceManager {
 	}
 
 	public User getSingleUser(String emailId) {
-		return entityManager.find(User.class, emailId);
+		return entityManager.getReference(User.class, emailId);
 	}
-
-
 
 	public Role getRole(String roleText) {
 		// check exists
@@ -221,9 +217,22 @@ public class EvaluationPersistenceManager {
 			return result.get(0);
 		}
 	}
-
+ 
 	public Teacher getTeacher(User currentUser) {
-		return currentUser.getPersons().get(0).getTeacher();
+
+		return getPerson(currentUser).getTeacher();
+	}
+
+	public Person getPerson(User currentUser) {
+		TypedQuery<Person> getTeacherFromUser = entityManager
+				.createQuery("SELECT p FROM Person p WHERE p.user.idUserEmail = :userId",
+						Person.class)
+				.setParameter("userId", currentUser.getIdUserEmail());
+		List<Person> resultList = getTeacherFromUser.getResultList();
+		if (resultList.isEmpty()) {
+			return null;
+		}
+		return resultList.get(0);
 	}
 
 	public List<Person> getPeople() {

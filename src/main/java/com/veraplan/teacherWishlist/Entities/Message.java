@@ -15,7 +15,7 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idMessage;
 
 	private String content;
@@ -24,12 +24,12 @@ public class Message implements Serializable {
 
 	private Timestamp timestamp;
 
-	//bi-directional many-to-one association to User
+	//uni-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="sender")
 	private User user1;
 
-	//bi-directional many-to-one association to User
+	//uni-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="recipient")
 	private User user2;

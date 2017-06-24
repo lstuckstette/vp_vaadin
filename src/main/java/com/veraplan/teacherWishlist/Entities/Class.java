@@ -15,17 +15,18 @@ public class Class implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idClass;
 
 	private String name;
 
 	//bi-directional many-to-one association to Lesson
-	@OneToMany(mappedBy="clazz")
-	private List<Lesson> lessons;
+	@ManyToOne
+	@JoinColumn(name="lessonFK")
+	private Lesson lesson;
 
-	//bi-directional many-to-many association to Student
-	@ManyToMany(mappedBy="clazzs")
+	//bi-directional many-to-one association to Student
+	@OneToMany(mappedBy="clazz")
 	private List<Student> students;
 
 	public Class() {
@@ -47,26 +48,12 @@ public class Class implements Serializable {
 		this.name = name;
 	}
 
-	public List<Lesson> getLessons() {
-		return this.lessons;
+	public Lesson getLesson() {
+		return this.lesson;
 	}
 
-	public void setLessons(List<Lesson> lessons) {
-		this.lessons = lessons;
-	}
-
-	public Lesson addLesson(Lesson lesson) {
-		getLessons().add(lesson);
-		lesson.setClazz(this);
-
-		return lesson;
-	}
-
-	public Lesson removeLesson(Lesson lesson) {
-		getLessons().remove(lesson);
-		lesson.setClazz(null);
-
-		return lesson;
+	public void setLesson(Lesson lesson) {
+		this.lesson = lesson;
 	}
 
 	public List<Student> getStudents() {
@@ -75,6 +62,20 @@ public class Class implements Serializable {
 
 	public void setStudents(List<Student> students) {
 		this.students = students;
+	}
+
+	public Student addStudent(Student student) {
+		getStudents().add(student);
+		student.setClazz(this);
+
+		return student;
+	}
+
+	public Student removeStudent(Student student) {
+		getStudents().remove(student);
+		student.setClazz(null);
+
+		return student;
 	}
 
 }

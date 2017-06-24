@@ -9,6 +9,7 @@ public interface CurrentUser {
 	public void setLoggedIn(boolean isLoggedIn);
 	public User getUser();
 	public void setUser(User user);
+	public void setPerson(Person p);
 	public Person getPerson();
 	
 }

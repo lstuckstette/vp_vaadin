@@ -16,23 +16,20 @@ public class Teacher implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idTeacher;
 
 	@Temporal(TemporalType.DATE)
 	private Date hireDate;
 
-	//bi-directional many-to-one association to Person
-	@OneToMany(mappedBy="teacher")
-	private List<Person> persons;
-
 	//bi-directional many-to-one association to Lesson
 	@ManyToOne
+	@JoinColumn(name="lessonFK")
 	private Lesson lesson;
 
-	//bi-directional many-to-one association to TeacherWishlist
+	//bi-directional many-to-one association to Teacherwishlist
 	@OneToMany(mappedBy="teacher")
-	private List<TeacherWishlist> teacherWishlists;
+	private List<Teacherwishlist> teacherwishlists;
 
 	public Teacher() {
 	}
@@ -53,28 +50,6 @@ public class Teacher implements Serializable {
 		this.hireDate = hireDate;
 	}
 
-	public List<Person> getPersons() {
-		return this.persons;
-	}
-
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
-
-	public Person addPerson(Person person) {
-		getPersons().add(person);
-		person.setTeacher(this);
-
-		return person;
-	}
-
-	public Person removePerson(Person person) {
-		getPersons().remove(person);
-		person.setTeacher(null);
-
-		return person;
-	}
-
 	public Lesson getLesson() {
 		return this.lesson;
 	}
@@ -83,26 +58,26 @@ public class Teacher implements Serializable {
 		this.lesson = lesson;
 	}
 
-	public List<TeacherWishlist> getTeacherWishlists() {
-		return this.teacherWishlists;
+	public List<Teacherwishlist> getTeacherwishlists() {
+		return this.teacherwishlists;
 	}
 
-	public void setTeacherWishlists(List<TeacherWishlist> teacherWishlists) {
-		this.teacherWishlists = teacherWishlists;
+	public void setTeacherwishlists(List<Teacherwishlist> teacherwishlists) {
+		this.teacherwishlists = teacherwishlists;
 	}
 
-	public TeacherWishlist addTeacherWishlist(TeacherWishlist teacherWishlist) {
-		getTeacherWishlists().add(teacherWishlist);
-		teacherWishlist.setTeacher(this);
+	public Teacherwishlist addTeacherwishlist(Teacherwishlist teacherwishlist) {
+		getTeacherwishlists().add(teacherwishlist);
+		teacherwishlist.setTeacher(this);
 
-		return teacherWishlist;
+		return teacherwishlist;
 	}
 
-	public TeacherWishlist removeTeacherWishlist(TeacherWishlist teacherWishlist) {
-		getTeacherWishlists().remove(teacherWishlist);
-		teacherWishlist.setTeacher(null);
+	public Teacherwishlist removeTeacherwishlist(Teacherwishlist teacherwishlist) {
+		getTeacherwishlists().remove(teacherwishlist);
+		teacherwishlist.setTeacher(null);
 
-		return teacherWishlist;
+		return teacherwishlist;
 	}
 
 }

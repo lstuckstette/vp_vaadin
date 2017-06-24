@@ -22,6 +22,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TextField;
@@ -38,10 +39,13 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 	EvaluationPersistenceManager epm;
 	@Inject
 	CurrentUser user;
+	
 	private Navigator navigator;
 
-	private FormLayout form;
-
+	private FormLayout formLayout;
+	private VerticalLayout masterLayout;
+	private Panel registerPanel;
+	
 	private Label pageHeader;
 
 	private TextField firstNameTextField;
@@ -65,73 +69,81 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 
 		navigator = getUI().getNavigator();
 
-		VerticalLayout layout = new VerticalLayout();
-		layout.setSizeFull();
-		layout.setMargin(true);
-		layout.setSpacing(true);
-		layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-		setCompositionRoot(layout);
-		layout.addComponent(new CustomMenuBar(navigator, user));
+		masterLayout = new VerticalLayout();
+		masterLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		setCompositionRoot(masterLayout);
+		masterLayout.addComponent(new CustomMenuBar(navigator, user));
 
 		pageHeader = new Label("<h1>Registrierung</h1>", ContentMode.HTML);
-		layout.addComponent(pageHeader);
+		masterLayout.addComponent(pageHeader);
 		// spacing:
-		layout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-		layout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		
+		registerPanel = new Panel("Bitte geben Sie folgende Informationen zu ihrer Person an:");
+		
+		masterLayout.addComponent(registerPanel);
+		masterLayout.setComponentAlignment(registerPanel, Alignment.TOP_CENTER);
+		masterLayout.setSizeFull();
+		registerPanel.setWidth(null);
+			
+		
+		formLayout = new FormLayout();
+		formLayout.setMargin(true);
+		setupFormElements();
 
-		layout.addComponent(
-				new Label("<h2>Bitte geben Sie folgende Informationen zu ihrer Person an:</h2>", ContentMode.HTML));
+		registerPanel.setContent(formLayout);
+		
+		
 
-		form = new FormLayout();
-		form.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-		form.setSizeFull();
+	}
 
+	private void setupFormElements() {
 		firstNameTextField = new TextField("Vorname");
 		firstNameTextField.setIcon(VaadinIcons.USER);
 		firstNameTextField.setRequiredIndicatorVisible(true);
-		form.addComponent(firstNameTextField);
+		formLayout.addComponent(firstNameTextField);
 
 		lastNameTextField = new TextField("Nachname");
 		lastNameTextField.setIcon(VaadinIcons.USER);
 		lastNameTextField.setRequiredIndicatorVisible(true);
-		form.addComponent(lastNameTextField);
+		formLayout.addComponent(lastNameTextField);
 
 		birthdayDateField = new DateField("Geburtsdatum");
 		birthdayDateField.setIcon(VaadinIcons.DATE_INPUT);
 		birthdayDateField.setDateFormat("dd.MM.yyyy");
-		form.addComponent(birthdayDateField);
+		formLayout.addComponent(birthdayDateField);
 
 		addressTextField = new TextField("Adresse");
 		addressTextField.setIcon(VaadinIcons.HOME);
-		form.addComponent(addressTextField);
+		formLayout.addComponent(addressTextField);
 
 		postalCodeTextField = new TextField("Postleitzahl");
 		postalCodeTextField.setIcon(VaadinIcons.HASH);
-		form.addComponent(postalCodeTextField);
+		formLayout.addComponent(postalCodeTextField);
 
 		cityTextField = new TextField("Stadt");
 		cityTextField.setIcon(VaadinIcons.HOME);
-		form.addComponent(cityTextField);
+		formLayout.addComponent(cityTextField);
 
 		genderSelect = new RadioButtonGroup<>("Geschlecht");
 		genderSelect.setItems("männlich", "weiblich", "keine Angabe");
 		genderSelect.setIcon(VaadinIcons.FAMILY);
-		form.addComponent(genderSelect);
+		formLayout.addComponent(genderSelect);
 
 		emailTextField = new TextField("Email");
 		emailTextField.setRequiredIndicatorVisible(true);
 		emailTextField.setIcon(VaadinIcons.AT);
-		form.addComponent(emailTextField);
+		formLayout.addComponent(emailTextField);
 
 		notificationEmailTextField = new TextField("Benachrichtigungs Email");
 		notificationEmailTextField.setRequiredIndicatorVisible(true);
 		notificationEmailTextField.setIcon(VaadinIcons.AT);
-		form.addComponent(notificationEmailTextField);
+		formLayout.addComponent(notificationEmailTextField);
 
 		passwordField = new PasswordField("Kennwort");
 		passwordField.setRequiredIndicatorVisible(true);
 		passwordField.setIcon(VaadinIcons.PASSWORD);
-		form.addComponent(passwordField);
+		formLayout.addComponent(passwordField);
 
 		passwordConfirmField = new PasswordField("Kennwort wiederholen");
 		passwordConfirmField.setRequiredIndicatorVisible(true);
@@ -144,7 +156,7 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 				passwordConfirmField.setComponentError(null);
 			}
 		});
-		form.addComponent(passwordConfirmField);
+		formLayout.addComponent(passwordConfirmField);
 
 		positionSelect = new RadioButtonGroup<>("Rolle am Institut");
 		positionSelect.setRequiredIndicatorVisible(true);
@@ -152,23 +164,17 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 		positionSelect.setItemEnabledProvider(item -> !"Schüler".equals(item));
 		positionSelect.setItemEnabledProvider(item -> !"Mitarbeiter".equals(item));
 		positionSelect.setIcon(VaadinIcons.WORKPLACE);
-		form.addComponent(positionSelect);
+		formLayout.addComponent(positionSelect);
 
 		// ...
 		positionHireDateField = new DateField("Beginn des Arbeitsverhältnisses");
 		positionHireDateField.setIcon(VaadinIcons.DATE_INPUT);
 		positionHireDateField.setDateFormat("dd.MM.yyyy");
-		form.addComponent(positionHireDateField);
+		formLayout.addComponent(positionHireDateField);
 
 		confirm = new Button("Absenden");
 		confirm.addClickListener(this);
-		form.addComponent(confirm);
-
-		VerticalLayout formParent = new VerticalLayout();
-		formParent.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-		formParent.addComponent(form);
-		layout.addComponent(formParent);
-
+		formLayout.addComponent(confirm);
 	}
 
 	private Map<RegistrationField, String> getEnteredData() {
@@ -197,7 +203,7 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 		if(!epm.registerUser(enteredData)){
 			Notification.show("Benutzername existiert bereits.", Notification.Type.ERROR_MESSAGE);
 		} else {
-			Notification.show("Benutzer erfolgreich erstellt.");
+			Notification.show("Benutzer erfolgreich erstellt.",Notification.Type.TRAY_NOTIFICATION);
 		}
 		// persist map
 

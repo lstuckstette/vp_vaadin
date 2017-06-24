@@ -15,26 +15,21 @@ public class Lesson implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idClass;
 
-	private int class_Teachers_idClass_Teachers;
-
 	//bi-directional many-to-one association to Class
-	@ManyToOne
-	@JoinColumn(name="Class_idClass")
-	private Class clazz;
+	@OneToMany(mappedBy="lesson")
+	private List<Class> clazzs;
 
 	//bi-directional many-to-one association to Event
 	@ManyToOne
+	@JoinColumn(name="eventFK")
 	private Event event;
-
-	//bi-directional many-to-one association to Room
-	@ManyToOne
-	private Room room;
 
 	//bi-directional many-to-one association to Subject
 	@ManyToOne
+	@JoinColumn(name="subjectFK")
 	private Subject subject;
 
 	//bi-directional many-to-one association to Teacher
@@ -52,20 +47,26 @@ public class Lesson implements Serializable {
 		this.idClass = idClass;
 	}
 
-	public int getClass_Teachers_idClass_Teachers() {
-		return this.class_Teachers_idClass_Teachers;
+	public List<Class> getClazzs() {
+		return this.clazzs;
 	}
 
-	public void setClass_Teachers_idClass_Teachers(int class_Teachers_idClass_Teachers) {
-		this.class_Teachers_idClass_Teachers = class_Teachers_idClass_Teachers;
+	public void setClazzs(List<Class> clazzs) {
+		this.clazzs = clazzs;
 	}
 
-	public Class getClazz() {
-		return this.clazz;
+	public Class addClazz(Class clazz) {
+		getClazzs().add(clazz);
+		clazz.setLesson(this);
+
+		return clazz;
 	}
 
-	public void setClazz(Class clazz) {
-		this.clazz = clazz;
+	public Class removeClazz(Class clazz) {
+		getClazzs().remove(clazz);
+		clazz.setLesson(null);
+
+		return clazz;
 	}
 
 	public Event getEvent() {
@@ -74,14 +75,6 @@ public class Lesson implements Serializable {
 
 	public void setEvent(Event event) {
 		this.event = event;
-	}
-
-	public Room getRoom() {
-		return this.room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
 	}
 
 	public Subject getSubject() {

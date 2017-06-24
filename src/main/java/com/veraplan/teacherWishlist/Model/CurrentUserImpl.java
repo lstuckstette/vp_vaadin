@@ -8,11 +8,11 @@ import com.veraplan.teacherWishlist.Entities.User;
 
 @SuppressWarnings("serial")
 @UIScoped
-public class CurrentUserImpl implements CurrentUser, Serializable{
+public class CurrentUserImpl implements CurrentUser, Serializable {
 
 	private boolean isLoggedIn;
 	private User user;
-
+	private Person person;
 
 	public CurrentUserImpl() {
 		this.isLoggedIn = false;
@@ -34,12 +34,14 @@ public class CurrentUserImpl implements CurrentUser, Serializable{
 		this.user = user;
 	}
 
-	public Person getPerson() {
-		return user.getPersons().get(0);
+	public void setPerson(Person person) {
+		this.person = person;
+
 	}
 
-
-	
-	
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return person;
+	}
 
 }

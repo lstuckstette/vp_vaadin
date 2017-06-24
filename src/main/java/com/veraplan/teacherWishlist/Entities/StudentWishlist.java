@@ -16,7 +16,7 @@ public class StudentWishlist implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idStudent_Wishlist;
 
 	private String changeRoom;
@@ -31,6 +31,7 @@ public class StudentWishlist implements Serializable {
 
 	//bi-directional many-to-one association to Student
 	@ManyToOne
+	@JoinColumn(name="studentFK")
 	private Student student;
 
 	public StudentWishlist() {

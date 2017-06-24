@@ -7,44 +7,44 @@ import java.util.List;
 
 
 /**
- * The persistent class for the teacher_wishlist database table.
+ * The persistent class for the teacherwishlist database table.
  * 
  */
 @Entity
-@Table(name="teacher_wishlist")
-@NamedQuery(name="TeacherWishlist.findAll", query="SELECT t FROM TeacherWishlist t")
-public class TeacherWishlist implements Serializable {
+@NamedQuery(name="Teacherwishlist.findAll", query="SELECT t FROM Teacherwishlist t")
+public class Teacherwishlist implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int idTeacher_Wishlist;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idTeacherWishlist;
 
 	private Timestamp date;
 
 	private String periodicAbsenceComment;
 
 	//bi-directional many-to-one association to Absence
-	@OneToMany(mappedBy="teacherWishlist")
+	@OneToMany(mappedBy="teacherwishlist")
 	private List<Absence> absences;
 
 	//bi-directional many-to-one association to Periodicabsencetimeslot
-	@OneToMany(mappedBy="teacherWishlist")
+	@OneToMany(mappedBy="teacherwishlist")
 	private List<Periodicabsencetimeslot> periodicabsencetimeslots;
 
 	//bi-directional many-to-one association to Teacher
 	@ManyToOne
+	@JoinColumn(name="teacherFK")
 	private Teacher teacher;
 
-	public TeacherWishlist() {
+	public Teacherwishlist() {
 	}
 
-	public int getIdTeacher_Wishlist() {
-		return this.idTeacher_Wishlist;
+	public int getIdTeacherWishlist() {
+		return this.idTeacherWishlist;
 	}
 
-	public void setIdTeacher_Wishlist(int idTeacher_Wishlist) {
-		this.idTeacher_Wishlist = idTeacher_Wishlist;
+	public void setIdTeacherWishlist(int idTeacherWishlist) {
+		this.idTeacherWishlist = idTeacherWishlist;
 	}
 
 	public Timestamp getDate() {
@@ -73,14 +73,14 @@ public class TeacherWishlist implements Serializable {
 
 	public Absence addAbsence(Absence absence) {
 		getAbsences().add(absence);
-		absence.setTeacherWishlist(this);
+		absence.setTeacherwishlist(this);
 
 		return absence;
 	}
 
 	public Absence removeAbsence(Absence absence) {
 		getAbsences().remove(absence);
-		absence.setTeacherWishlist(null);
+		absence.setTeacherwishlist(null);
 
 		return absence;
 	}
@@ -95,14 +95,14 @@ public class TeacherWishlist implements Serializable {
 
 	public Periodicabsencetimeslot addPeriodicabsencetimeslot(Periodicabsencetimeslot periodicabsencetimeslot) {
 		getPeriodicabsencetimeslots().add(periodicabsencetimeslot);
-		periodicabsencetimeslot.setTeacherWishlist(this);
+		periodicabsencetimeslot.setTeacherwishlist(this);
 
 		return periodicabsencetimeslot;
 	}
 
 	public Periodicabsencetimeslot removePeriodicabsencetimeslot(Periodicabsencetimeslot periodicabsencetimeslot) {
 		getPeriodicabsencetimeslots().remove(periodicabsencetimeslot);
-		periodicabsencetimeslot.setTeacherWishlist(null);
+		periodicabsencetimeslot.setTeacherwishlist(null);
 
 		return periodicabsencetimeslot;
 	}

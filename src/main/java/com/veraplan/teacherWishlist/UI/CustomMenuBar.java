@@ -59,8 +59,7 @@ public class CustomMenuBar extends MenuBar {
 
 	public void setLoginIndicatorCaption() {
 		if (user.isLoggedIn()) {
-			loginIndicator.setText("eingeloggt als: " + user.getPerson().getFirstName() + " "
-					+user.getPerson().getLastName());
+			loginIndicator.setText("eingeloggt als: " + user.getPerson().getFirstName() + " "+ user.getPerson().getLastName());
 		} else {
 			loginIndicator.setText("nicht eingeloggt.");
 		}

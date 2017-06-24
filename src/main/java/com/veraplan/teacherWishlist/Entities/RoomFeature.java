@@ -15,13 +15,14 @@ public class RoomFeature implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idRoom_Feature;
 
 	private String feature;
 
-	//bi-directional many-to-one association to Room
+	//uni-directional many-to-one association to Room
 	@ManyToOne
+	@JoinColumn(name="roomFK")
 	private Room room;
 
 	public RoomFeature() {

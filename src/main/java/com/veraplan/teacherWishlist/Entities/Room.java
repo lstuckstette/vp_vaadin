@@ -15,20 +15,16 @@ public class Room implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idRoom;
 
 	private String abbreviation;
 
 	private String name;
 
-	//bi-directional many-to-one association to Lesson
+	//bi-directional many-to-one association to Event
 	@OneToMany(mappedBy="room")
-	private List<Lesson> lessons;
-
-	//bi-directional many-to-one association to RoomFeature
-	@OneToMany(mappedBy="room")
-	private List<RoomFeature> roomFeatures;
+	private List<Event> events;
 
 	public Room() {
 	}
@@ -57,48 +53,26 @@ public class Room implements Serializable {
 		this.name = name;
 	}
 
-	public List<Lesson> getLessons() {
-		return this.lessons;
+	public List<Event> getEvents() {
+		return this.events;
 	}
 
-	public void setLessons(List<Lesson> lessons) {
-		this.lessons = lessons;
+	public void setEvents(List<Event> events) {
+		this.events = events;
 	}
 
-	public Lesson addLesson(Lesson lesson) {
-		getLessons().add(lesson);
-		lesson.setRoom(this);
+	public Event addEvent(Event event) {
+		getEvents().add(event);
+		event.setRoom(this);
 
-		return lesson;
+		return event;
 	}
 
-	public Lesson removeLesson(Lesson lesson) {
-		getLessons().remove(lesson);
-		lesson.setRoom(null);
+	public Event removeEvent(Event event) {
+		getEvents().remove(event);
+		event.setRoom(null);
 
-		return lesson;
-	}
-
-	public List<RoomFeature> getRoomFeatures() {
-		return this.roomFeatures;
-	}
-
-	public void setRoomFeatures(List<RoomFeature> roomFeatures) {
-		this.roomFeatures = roomFeatures;
-	}
-
-	public RoomFeature addRoomFeature(RoomFeature roomFeature) {
-		getRoomFeatures().add(roomFeature);
-		roomFeature.setRoom(this);
-
-		return roomFeature;
-	}
-
-	public RoomFeature removeRoomFeature(RoomFeature roomFeature) {
-		getRoomFeatures().remove(roomFeature);
-		roomFeature.setRoom(null);
-
-		return roomFeature;
+		return event;
 	}
 
 }

@@ -19,6 +19,7 @@ import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.ItemClickListener;
@@ -43,11 +44,18 @@ public class EvaluationView extends CustomComponent implements View {
 	private ArrayList<TimeSlotRowContainer> periodicTimeTableData;
 	private ArrayList<VacationItem> vacationList;
 	private VerticalLayout masterLayout;
+	
+		private VerticalLayout vacationLayout;
+		private VerticalLayout periodicLayout;
+	
 	private HorizontalLayout vacationHorizontalLayout;
 	private Label headerVacation, headerPeriodic, pageHeader;
 	private Grid<TimeSlotRowContainer> periodicGrid;
 	private Grid<VacationItem> vacationGrid;
 	private Button confirmButton;
+	
+		private Panel vacationPanel;
+		private Panel periodicPanel;
 	
 	
 	@Override
