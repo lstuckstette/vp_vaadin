@@ -59,16 +59,52 @@ public class TimeSlotRowContainer {
 		return returnList;
 	}
 
-	public static List<Periodicabsencetimeslot> toPeriodicabsencetimeslotList(List<TimeSlotRowContainer> inputList){
+	public static List<Periodicabsencetimeslot> toPeriodicabsencetimeslotList(List<TimeSlotRowContainer> inputList) {
 		ArrayList<Periodicabsencetimeslot> returnList = new ArrayList<>();
-		for(TimeSlotRowContainer tsrc : inputList){
-			for(TimeSlot ts : tsrc.getTimeSlots()){
-				if(ts.getSelected()){
+		for (TimeSlotRowContainer tsrc : inputList) {
+			for (TimeSlot ts : tsrc.getTimeSlots()) {
+				if (ts.getSelected()) {
 					returnList.add(ts.toPeriodicabsencetimeslot());
 				}
 			}
 		}
 		return returnList;
+	}
+
+	public static List<TimeSlotRowContainer> fromPeriodicabsencetimeslotList(List<Periodicabsencetimeslot> inputList) {
+		ArrayList<TimeSlotRowContainer> resultList = new ArrayList<>();
+
+		for (int i = 1; i <= StaticSchoolData.TIMESLOT_COUNT; i++) {
+			TimeSlotRowContainer currentRow = new TimeSlotRowContainer(i);
+			// check for marked slots:
+			for (Periodicabsencetimeslot pats : inputList) {
+				if (pats.getTimeSlotNumber() == i) {
+					switch (pats.getWeekday()) {
+					case 1:
+						currentRow.getMonday().toggleSelected();
+						break;
+					case 2:
+						currentRow.getTuesday().toggleSelected();
+						break;
+					case 3:
+						currentRow.getWednesday().toggleSelected();
+						break;
+					case 4:
+						currentRow.getThursday().toggleSelected();
+						break;
+					case 5:
+						currentRow.getFriday().toggleSelected();
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			resultList.add(currentRow);
+		}
+		
+
+		return resultList;
 	}
 
 }

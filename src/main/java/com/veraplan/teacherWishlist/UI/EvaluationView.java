@@ -182,7 +182,7 @@ public class EvaluationView extends CustomComponent implements View {
 		// show Grid containing chosen Elements
 		vacationGrid = new Grid<VacationItem>("Liste der eingetragenen Urlaubswünsche");
 		vacationGrid.setItems(vacationList);
-		vacationGrid.addColumn(VacationItem::getStartDate).setId("start").setCaption("Urlaubsbeginn");
+		vacationGrid.addColumn(item -> item.getStartDate()).setId("start").setCaption("Urlaubsbeginn");
 		vacationGrid.addColumn(VacationItem::getEndDate).setId("end").setCaption("Urlaubsende");
 		vacationGrid.addColumn(VacationItem::getComment).setId("comment").setCaption("Kommentar");
 		vacationGrid.addColumn(vacationitem -> "Entfernen", new ButtonRenderer<>(clickEvent -> {

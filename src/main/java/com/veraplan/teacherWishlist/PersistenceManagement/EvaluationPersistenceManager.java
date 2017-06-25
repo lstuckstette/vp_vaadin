@@ -261,6 +261,19 @@ public class EvaluationPersistenceManager {
 		}
 		return resultList.get(0);
 	}
+	
+	public List<Person> getPeopleRepresentingTeacher(){
+		TypedQuery<Person> personQuery = entityManager.createQuery("SELECT p FROM Person p WHERE p.teacher IS NOT NULL",Person.class);
+		return personQuery.getResultList();
+	}
+	
+	public List<Teacherwishlist> getTeacherwishlist(Teacher teacher){
+		TypedQuery<Teacherwishlist> wishlistQuery = entityManager
+				.createQuery("SELECT twl FROM Teacherwishlist twl WHERE twl.teacher.idTeacher = :idteacher",
+						Teacherwishlist.class)
+				.setParameter("idteacher", teacher.getIdTeacher());
+		return wishlistQuery.getResultList();
+	}
 
 	public List<Person> getPeople() {
 		TypedQuery<Person> personCheckQuery = entityManager.createQuery("SELECT p FROM Person p", Person.class);
