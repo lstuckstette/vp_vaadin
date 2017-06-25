@@ -40,7 +40,6 @@ public class CurrentUserImpl implements CurrentUser, Serializable {
 	}
 
 	public Person getPerson() {
-		// TODO Auto-generated method stub
 		return person;
 	}
 

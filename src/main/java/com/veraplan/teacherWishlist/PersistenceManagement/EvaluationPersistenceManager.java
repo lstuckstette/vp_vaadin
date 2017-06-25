@@ -69,9 +69,6 @@ public class EvaluationPersistenceManager {
 			dummyPerson.setFirstName("Max");
 			dummyPerson.setLastName("Mustermann");
 			dummyPerson.setUser(dummyUser);
-			// ArrayList<Person> tList = new ArrayList<>();
-			// tList.add(dummyPerson);
-			// dummyTeacher.setPersons(tList);
 			dummyPerson.setTeacher(dummyTeacher);
 
 			// persist above
@@ -193,11 +190,7 @@ public class EvaluationPersistenceManager {
 		default:
 			newPerson.setGender("O");
 		}
-
 		newPerson.setUser(newUser);
-		// ArrayList<Person> tList = new ArrayList<>();
-		// tList.add(newPerson);
-		// newTeacher.setPersons(tList);
 		newPerson.setTeacher(newTeacher);
 
 		// persist generated Entities and commit

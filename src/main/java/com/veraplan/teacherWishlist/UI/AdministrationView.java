@@ -11,6 +11,8 @@ import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,6 +32,7 @@ import com.veraplan.teacherWishlist.Entities.Teacherwishlist;
 import com.veraplan.teacherWishlist.Model.CurrentUser;
 import com.veraplan.teacherWishlist.Model.StaticSchoolData;
 import com.veraplan.teacherWishlist.Model.TimeSlotRowContainer;
+import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationExportManager;
 import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceManager;
 
 @SuppressWarnings("serial")
@@ -40,6 +43,8 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 	CurrentUser user;
 	@Inject
 	EvaluationPersistenceManager epm;
+	@Inject 
+	EvaluationExportManager eem;
 
 	private Navigator navigator;
 	private Label pageHeader;
@@ -102,6 +107,9 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 		teacherWishlistSelectConfirm.addClickListener(this);
 
 		generateJSONBatch = new Button("Alle Erhebungsdaten exportieren:");
+		StreamResource downloadData = eem.getEvaluationBatchJSONData();
+		FileDownloader fileDownloader = new FileDownloader(downloadData);
+		fileDownloader.extend(generateJSONBatch);
 
 		teacherWishlistSelectLayout.addComponents(selectTeacher, selectWishList, teacherWishlistSelectConfirm,
 				generateJSONBatch);
@@ -111,6 +119,9 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 
 		// build On-Demand TeacherWishlistView Panel
 
+		// spacing:
+		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
+		
 		// dummy-Panel:
 		teacherWishlistView = new Panel("Auswahl:");
 
@@ -134,9 +145,6 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 	}
 
 	private void replaceViewPanel() {
-
-		// spacing:
-		teacherWishlistViewLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 
 		masterLayout.removeComponent(teacherWishlistView);
 		teacherWishlistView = new Panel("Auswahl:");
