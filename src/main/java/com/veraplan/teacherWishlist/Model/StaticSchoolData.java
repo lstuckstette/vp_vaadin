@@ -1,6 +1,6 @@
 package com.veraplan.teacherWishlist.Model;
 
-public final class StaticSchoolData {
+public class StaticSchoolData {
 
 	public static final int TIMESLOT_COUNT = 9;
 

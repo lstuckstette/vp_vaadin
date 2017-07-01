@@ -9,10 +9,6 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
-
-
-
-
 /**
  * This UI is the application entry point. A UI may either represent a browser
  * window (or tab) or some part of a html page where a Vaadin application is

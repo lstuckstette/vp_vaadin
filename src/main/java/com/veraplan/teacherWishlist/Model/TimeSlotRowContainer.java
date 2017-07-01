@@ -64,7 +64,7 @@ public class TimeSlotRowContainer {
 		for (TimeSlotRowContainer tsrc : inputList) {
 			for (TimeSlot ts : tsrc.getTimeSlots()) {
 				if (ts.getSelected()) {
-					returnList.add(ts.toPeriodicabsencetimeslot());
+					returnList.add(ts.toPeriodicabsencetimeslotEntity());
 				}
 			}
 		}

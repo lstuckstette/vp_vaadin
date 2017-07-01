@@ -38,7 +38,7 @@ public class EvaluationPersistenceManager {
 		setupDummyData();
 	}
 
-	public void setupDummyData() {
+	private void setupDummyData() {
 
 		// check if dummy person exists
 		TypedQuery<Person> personCheckQuery = entityManager
@@ -223,15 +223,15 @@ public class EvaluationPersistenceManager {
 		return entityManager.getReference(User.class, emailId);
 	}
 
-	public Role getRole(String roleText) {
+	public Role getRole(String roleCaption) {
 		// check exists
 		TypedQuery<Role> roleQuery = entityManager.createQuery("SELECT r FROM Role r WHERE r.role = :role", Role.class)
-				.setParameter("role", roleText);
+				.setParameter("role", roleCaption);
 		List<Role> result = roleQuery.getResultList();
 		if (result.isEmpty()) {
 			// create new Role, persist and return
 			Role newRole = new Role();
-			newRole.setRole(roleText);
+			newRole.setRole(roleCaption);
 			return newRole;
 		} else {
 			// return existing role

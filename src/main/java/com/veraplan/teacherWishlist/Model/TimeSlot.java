@@ -40,7 +40,7 @@ public class TimeSlot {
 		return "TS-Info: WeekDay '" + weekday + "' TimeString '" + StaticSchoolData.getTimeString(timeSlotNumber) + "'";
 	}
 	
-	public Periodicabsencetimeslot toPeriodicabsencetimeslot(){
+	public Periodicabsencetimeslot toPeriodicabsencetimeslotEntity(){
 		Periodicabsencetimeslot pats = new Periodicabsencetimeslot();
 		pats.setTimeSlotNumber(this.getTimeSlotNumber());
 		pats.setWeekday(this.getWeekday());
