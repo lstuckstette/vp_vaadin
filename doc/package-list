@@ -1,0 +1,5 @@
+com.veraplan.teacherWishlist.DataTransferObject
+com.veraplan.teacherWishlist.Entities
+com.veraplan.teacherWishlist.Model
+com.veraplan.teacherWishlist.PersistenceManagement
+com.veraplan.teacherWishlist.UI

@@ -25,27 +25,35 @@ import com.veraplan.teacherWishlist.Entities.User;
 import com.veraplan.teacherWishlist.Model.CurrentUser;
 import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceManager;
 
+/**
+ * LoginView is respresentig the 'Login'-page of the application.
+ * @author Lukas Stuckstette
+ *
+ */
 @SuppressWarnings("serial")
 @CDIView("login")
 public class LoginView extends CustomComponent implements View, ClickListener {
-
+	
+	//inject CurrentUser bean
 	@Inject
 	CurrentUser user;
-
+	//inject persistence manager
 	@Inject
 	EvaluationPersistenceManager epm;
 
+	//UI-elements:
 	private TextField usernameField;
 	private PasswordField passwordField;
 	private Button loginButton;
-
 	private Navigator navigator;
 	private Label pageHeader;
-
 	private VerticalLayout masterLayout;
 	private Panel loginPanel;
 	private FormLayout loginForm;
 
+	/*
+	 * builds UI of login-view
+	 */
 	@Override
 	public void enter(ViewChangeEvent event) {
 		navigator = getUI().getNavigator();
@@ -91,6 +99,10 @@ public class LoginView extends CustomComponent implements View, ClickListener {
 
 	}
 
+	/* 
+	 * ClickListener - callback method: checks for correctly entered 
+	 * authentification data and sets user as logged in
+	 */
 	@Override
 	public void buttonClick(ClickEvent event) {
 		// Dummy implementation

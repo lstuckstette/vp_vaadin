@@ -35,17 +35,27 @@ import com.veraplan.teacherWishlist.Model.TimeSlotRowContainer;
 import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationExportManager;
 import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceManager;
 
+
+/**
+ * AdministrationView is respresentig the 'Administration'-page of the application.
+ * @author Lukas Stuckstette
+ *
+ */
 @SuppressWarnings("serial")
 @CDIView("administration")
 public class AdministrationView extends CustomComponent implements View, ClickListener {
 
+	//inject CurrentUser bean
 	@Inject
 	CurrentUser user;
+	//inject persistence manager
 	@Inject
 	EvaluationPersistenceManager epm;
+	//inject export manager
 	@Inject 
 	EvaluationExportManager eem;
 
+	//UI-elements:
 	private Navigator navigator;
 	private Label pageHeader;
 
@@ -61,6 +71,10 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 	private ComboBox<Person> selectTeacher;
 	private ComboBox<Teacherwishlist> selectWishList;
 
+	
+	/*
+	 * builds UI of administration-view
+	 */
 	@Override
 	public void enter(ViewChangeEvent event) {
 
@@ -71,7 +85,9 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 		masterLayout.setMargin(true);
 		masterLayout.setSpacing(true);
 		masterLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		//include Navigationbar
 		masterLayout.addComponent(new CustomMenuBar(navigator, user));
+		//set content of view
 		setCompositionRoot(masterLayout);
 
 		pageHeader = new Label("<h1>Administration</h1>", ContentMode.HTML);
@@ -129,21 +145,33 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 		teacherWishlistView.setVisible(false);
 	}
 
+	/**
+	 * converts Timestamp to representing string
+	 * @param t the Timestamp to be converted
+	 * @return string representing the Timestamp
+	 */
 	private String convertTime(Timestamp t) {
 		if (t == null) {
 			return "<no-time-string>";
 		}
-
 		Date date = new Date();
 		date.setTime(t.getTime());
 		return convertTime(date);
 	}
 
+	/**
+	 * converts Date to representing string in format 'dd.MM.yyyy'
+	 * @param date the Date to be converted
+	 * @return string representing the Date
+	 */
 	private String convertTime(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		return dateFormat.format(date);
 	}
 
+	/**
+	 * replaces the existing 'Auswahl:'panel with a new panel containing new data
+	 */
 	private void replaceViewPanel() {
 
 		masterLayout.removeComponent(teacherWishlistView);
@@ -197,10 +225,7 @@ public class AdministrationView extends CustomComponent implements View, ClickLi
 
 	@Override
 	public void buttonClick(ClickEvent event) {
-		// remove old Panel:
-		// masterLayout.removeComponent(teacherWishlistView);
-		// create new ViewPanel
-
+		//replace existing panel with new panel containing new data
 		replaceViewPanel();
 
 	}

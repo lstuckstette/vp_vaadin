@@ -22,44 +22,66 @@ import com.veraplan.teacherWishlist.Entities.Absence;
 import com.veraplan.teacherWishlist.Entities.Periodicabsencetimeslot;
 import com.veraplan.teacherWishlist.Entities.Teacherwishlist;
 
+/**
+ * EvaluationExportManager manages the export of database entries
+ * @author Lukas Stuckstette
+ */
 @UIScoped
 public class EvaluationExportManager {
 
+	//EntitiyManager for database operations
 	private EntityManager entityManager;
 
 	public EvaluationExportManager() {
+		//fetch a EntityManager object
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mysqlconn");
 		entityManager = emf.createEntityManager();
 	}
 
+	/**
+	 * fetches a list of all 'Teacherwishlist'Entities and return them in a List
+	 * @return a list of all 'Teacherwishlist' Entities
+	 */
 	private List<Teacherwishlist> getTeacherwishlists() {
 		TypedQuery<Teacherwishlist> twlQuery = entityManager.createQuery("SELECT twl FROM Teacherwishlist twl",
 				Teacherwishlist.class);
 		return twlQuery.getResultList();
 	}
 
+	/**
+	 * generates a JSON-String representing all 'Teacherwishlist' entities 
+	 * and embedds it in a StreamResource for ease of downloading it.
+	 * @return a StreamResource containing a JSON-String representing all 'Teacherwishlist' entities
+	 */
 	@SuppressWarnings("serial")
-	public StreamResource getEvaluationBatchJSONData() {
+	public StreamResource getEvaluationBatchJSONData() { 
 
 		StreamSource source = new StreamSource() {
 
 			@Override
 			public InputStream getStream() {
 				Gson gson = new Gson();
+				//gather all Entities
 				List<Teacherwishlist> twlEList = getTeacherwishlists();
+				//transform to DTOs in oder to generate JSON-String
 				List<TeacherDTO> tDTOList = getTeacherWishlistDTOCollection(twlEList);
-				System.out.println("EntityListSize: "+twlEList.size());
-				System.out.println("DTOListSize: "+tDTOList.size());
+				//generate JSON-String
 				String data = gson.toJson(tDTOList);
+				//return InputStream containing JSON-String
 				return new ByteArrayInputStream(data.getBytes());
 			}
 
 		};
-
+		//return a StreamResource that provides a 'evaluation-batch.json' file containing the JSON-String
 		StreamResource resource = new StreamResource(source, "evaluation-batch.json");
 		return resource;
 	}
 
+	/**
+	 * converts a List of 'Teacherwishlist' Entites to a List of 'TeacherDTO' elements containing 'TeacherwishlistDTO's
+	 * @param entityList List of Teacherwishlist Entities
+	 * @return returns a list of 'TeacherDTO' elements containing 'TeacherwishlistDTO's
+	 */
 	private List<TeacherDTO> getTeacherWishlistDTOCollection(List<Teacherwishlist> entityList) {
 
 		ArrayList<TeacherDTO> teacherDTOList = new ArrayList<>();

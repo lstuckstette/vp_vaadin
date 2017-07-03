@@ -32,32 +32,41 @@ import com.veraplan.teacherWishlist.Model.TimeSlotRowContainer;
 import com.veraplan.teacherWishlist.Model.VacationItem;
 import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceManager;
 
+/**
+ * EvaluationView is respresentig the 'Erhebungsbogen'-page of the application.
+ * 
+ * @author Lukas Stuckstette
+ *
+ */
 @SuppressWarnings("serial")
 @CDIView("evaluation")
 public class EvaluationView extends CustomComponent implements View {
 
+	// inject persistence manager
 	@Inject
 	EvaluationPersistenceManager epm;
+	// inject CurrentUser bean
 	@Inject
 	CurrentUser user;
 
+	// UI-elements:
 	private ArrayList<TimeSlotRowContainer> periodicTimeTableData;
 	private ArrayList<VacationItem> vacationList;
 	private VerticalLayout masterLayout;
-
 	private VerticalLayout vacationLayout;
 	private FormLayout periodicLayout;
-
 	private FormLayout vacationFormLayout;
 	private Label pageHeader;
 	private Grid<TimeSlotRowContainer> periodicGrid;
 	private Grid<VacationItem> vacationGrid;
 	private Button confirmButton;
 	private TextArea periodicComment;
-
 	private Panel vacationPanel;
 	private Panel periodicPanel;
 
+	/*
+	 * builds UI of evaluation-view
+	 */
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// initialize Containers
@@ -79,38 +88,37 @@ public class EvaluationView extends CustomComponent implements View {
 		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 
 		// show specific Vacation Chooser:
-		
+
 		vacationPanel = new Panel("Spezielle Urlaubswünsche:");
 		masterLayout.addComponent(vacationPanel);
 		masterLayout.setComponentAlignment(vacationPanel, Alignment.TOP_CENTER);
 		vacationPanel.setWidth(null);
-		
+
 		vacationLayout = new VerticalLayout();
 		vacationLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
 		vacationLayout.setMargin(true);
 		vacationLayout.setSpacing(true);
 		buildVacationChooser();
-		
+
 		vacationPanel.setContent(vacationLayout);
 		// <--
 
 		// spacing:
 		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-		
 
 		// show periodic Absence Grid:
-		
+
 		periodicPanel = new Panel("Periodische Abwesenheiten:");
 		masterLayout.addComponent(periodicPanel);
 		masterLayout.setComponentAlignment(periodicPanel, Alignment.TOP_CENTER);
 		periodicPanel.setWidth(null);
-		
+
 		periodicLayout = new FormLayout();
 		periodicLayout.setMargin(true);
 		periodicLayout.setSpacing(true);
 		setupPeriodicGridData();
 		buildPeriodicGrid();
-		
+
 		periodicPanel.setContent(periodicLayout);
 
 		// spacing:
@@ -120,28 +128,32 @@ public class EvaluationView extends CustomComponent implements View {
 		// confirm Button that links to persist
 		confirmButton = new Button("Alles Absenden");
 		confirmButton.addClickListener(e -> {
-			//checkLogin
-			if(user.isLoggedIn()){
+			// checkLogin
+			if (user.isLoggedIn()) {
 				persistData();
 			} else {
+				// show not logged in error message
 				Notification.show("Sie sind nicht eingeloggt!", Notification.Type.ERROR_MESSAGE);
+				// redirect user to login page
 				getUI().getNavigator().navigateTo("login");
 			}
-			
+
 		});
 		masterLayout.addComponent(confirmButton);
 
 	}
 
+	/**
+	 * builds UI-elements concerning vacation entry
+	 */
 	private void buildVacationChooser() {
-
 		vacationFormLayout = new FormLayout();
 		vacationFormLayout.setMargin(true);
 		DateField vacationStartDate = new DateField("Urlaubsanfang");
 		vacationStartDate.setIcon(VaadinIcons.DATE_INPUT);
 		vacationStartDate.setRequiredIndicatorVisible(true);
 		vacationStartDate.setDateFormat("dd.MM.yyyy");
-		
+
 		DateField vacationEndDate = new DateField("Urlaubsende");
 		vacationEndDate.setIcon(VaadinIcons.DATE_INPUT);
 		vacationEndDate.setRequiredIndicatorVisible(true);
@@ -149,7 +161,7 @@ public class EvaluationView extends CustomComponent implements View {
 
 		TextArea vacationComment = new TextArea("Kommentar");
 		vacationComment.setIcon(VaadinIcons.TEXT_INPUT);
-		
+
 		Button vacationAddButton = new Button("Zur Liste hinzufügen");
 		vacationAddButton.addClickListener(e -> {
 			LocalDate start = vacationStartDate.getValue();
@@ -169,11 +181,11 @@ public class EvaluationView extends CustomComponent implements View {
 			}
 		});
 
-		vacationFormLayout.addComponents(vacationStartDate,vacationEndDate,vacationComment,vacationAddButton);
+		vacationFormLayout.addComponents(vacationStartDate, vacationEndDate, vacationComment, vacationAddButton);
 
 		vacationLayout.addComponent(vacationFormLayout);
 		vacationLayout.setComponentAlignment(vacationFormLayout, Alignment.TOP_CENTER);
-		
+
 		// spacing:
 		vacationLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 
@@ -187,7 +199,7 @@ public class EvaluationView extends CustomComponent implements View {
 			vacationList.remove(clickEvent.getItem());
 			vacationGrid.setItems(vacationList);
 		})).setCaption("Aktion");
-		
+
 		vacationGrid.setHeightByRows(4);
 
 		vacationLayout.addComponent(vacationGrid);
@@ -195,10 +207,10 @@ public class EvaluationView extends CustomComponent implements View {
 		vacationLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
 	}
 
+	/**
+	 * builds UI-elements concerning periodic absence entry
+	 */
 	private void buildPeriodicGrid() {
-
-
-		
 		periodicComment = new TextArea("Kommentar");
 
 		periodicGrid = new Grid<>("Bitte einzelne Felder markieren:");
@@ -216,11 +228,10 @@ public class EvaluationView extends CustomComponent implements View {
 				.setStyleGenerator(item -> "v-align-center");
 		periodicGrid.addColumn(TimeSlotRowContainer::getFriday).setId("friday").setCaption("Freitag")
 				.setStyleGenerator(item -> "v-align-center");
-		
-		periodicGrid.setWidth("800");
-		
-		periodicGrid.addItemClickListener(new ItemClickListener<TimeSlotRowContainer>() {
 
+		periodicGrid.setWidth("800");
+
+		periodicGrid.addItemClickListener(new ItemClickListener<TimeSlotRowContainer>() {
 			@Override
 			public void itemClick(ItemClick<TimeSlotRowContainer> event) {
 				Column<TimeSlotRowContainer, ?> col = event.getColumn();
@@ -253,29 +264,24 @@ public class EvaluationView extends CustomComponent implements View {
 				}
 			}
 		});
-
-		// spacing:
-		//periodicLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-
 		periodicLayout.addComponents(periodicGrid, periodicComment);
-		//periodicLayout.setExpandRatio(periodicGrid, 5);
-		//periodicLayout.setExpandRatio(periodicComment, 1);
-
 	}
 
+	/**
+	 * generates the predefined contents of the absence entry grid
+	 */
 	private void setupPeriodicGridData() {
-
 		// populate:
 		for (int i = 1; i <= StaticSchoolData.TIMESLOT_COUNT; i++) {
 			periodicTimeTableData.add(new TimeSlotRowContainer(i));
 		}
-
 	}
 
+	/**
+	 * persists entered data
+	 */
 	private void persistData() {
-		
-		epm.persistEvaluation(user.getUser(), periodicTimeTableData, vacationList,periodicComment.getValue());
-
+		epm.persistEvaluation(user.getUser(), periodicTimeTableData, vacationList, periodicComment.getValue());
 	}
 
 }

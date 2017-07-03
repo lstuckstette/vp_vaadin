@@ -31,23 +31,30 @@ import com.veraplan.teacherWishlist.Model.CurrentUser;
 import com.veraplan.teacherWishlist.Model.RegistrationField;
 import com.veraplan.teacherWishlist.PersistenceManagement.EvaluationPersistenceManager;
 
+/**
+ * RegisterUserView is respresentig the 'Registrieren'-page of the application.
+ * 
+ * @author Lukas Stuckstette
+ *
+ */
 @SuppressWarnings("serial")
 @CDIView("register")
 public class RegisterUserView extends CustomComponent implements View, ClickListener {
 
+	// inject persistence manager
 	@Inject
 	EvaluationPersistenceManager epm;
+	// inject CurrentUser bean
 	@Inject
 	CurrentUser user;
-	
+
 	private Navigator navigator;
 
+	// UI-elements:
 	private FormLayout formLayout;
 	private VerticalLayout masterLayout;
 	private Panel registerPanel;
-	
 	private Label pageHeader;
-
 	private TextField firstNameTextField;
 	private TextField lastNameTextField;
 	private DateField birthdayDateField;
@@ -61,9 +68,11 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 	private PasswordField passwordConfirmField;
 	private RadioButtonGroup<String> positionSelect;
 	private DateField positionHireDateField;
-
 	private Button confirm;
 
+	/*
+	 * builds UI of register-view
+	 */
 	@Override
 	public void enter(ViewChangeEvent event) {
 
@@ -78,25 +87,25 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 		masterLayout.addComponent(pageHeader);
 		// spacing:
 		masterLayout.addComponent(new Label("&nbsp;", ContentMode.HTML));
-		
+
 		registerPanel = new Panel("Bitte geben Sie folgende Informationen zu ihrer Person an:");
-		
+
 		masterLayout.addComponent(registerPanel);
 		masterLayout.setComponentAlignment(registerPanel, Alignment.TOP_CENTER);
 		masterLayout.setSizeFull();
 		registerPanel.setWidth(null);
-			
-		
+
 		formLayout = new FormLayout();
 		formLayout.setMargin(true);
 		setupFormElements();
 
 		registerPanel.setContent(formLayout);
-		
-		
 
 	}
 
+	/**
+	 * builds UI-elements concerning registration data entry
+	 */
 	private void setupFormElements() {
 		firstNameTextField = new TextField("Vorname");
 		firstNameTextField.setIcon(VaadinIcons.USER);
@@ -177,35 +186,104 @@ public class RegisterUserView extends CustomComponent implements View, ClickList
 		formLayout.addComponent(confirm);
 	}
 
+	/**
+	 * Fetches entered data from input fields
+	 * 
+	 * @return returns a Map containing entered data mapped to a corresponding
+	 *         RegistrationField value
+	 */
 	private Map<RegistrationField, String> getEnteredData() {
+		// Null-Pointer checks:
+		String firstname = "<no-data>";
+		if (firstNameTextField.getValue() != null) {
+			firstname = firstNameTextField.getValue();
+		}
+
+		String lastname = "<no-data>";
+		if (lastNameTextField.getValue() != null) {
+			lastname = lastNameTextField.getValue();
+		}
+
+		String birthday = "01.01.1900";
+		if (birthdayDateField.getValue() != null) {
+			birthday = birthdayDateField.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		}
+
+		String address = "<no-data>";
+		if (addressTextField.getValue() != null) {
+			address = addressTextField.getValue();
+		}
+
+		String postalcode = "0";
+		if (postalCodeTextField.getValue() != null) {
+			postalcode = postalCodeTextField.getValue();
+		}
+
+		String city = "<no-data>";
+		if (cityTextField.getValue() != null) {
+			city = cityTextField.getValue();
+		}
+
+		String gender = "O";
+		if (genderSelect.getSelectedItem() != null) {
+			gender = genderSelect.getSelectedItem().get();
+		}
+
+		String email = "<no-data>";
+		if (emailTextField.getValue() != null) {
+			email = emailTextField.getValue();
+		}
+
+		String notiemail = "<no-data>";
+		if (notificationEmailTextField.getValue() != null) {
+			notiemail = notificationEmailTextField.getValue();
+		}
+
+		String password = "<no-data>";
+		if (passwordField.getValue() != null) {
+			password = passwordField.getValue();
+		}
+
+		String position = "<no-data>";
+		if (positionSelect.getSelectedItem() != null) {
+			position = positionSelect.getSelectedItem().get();
+		}
+
+		String hiredate = "01.01.1900";
+		if (positionHireDateField.getValue() != null) {
+			hiredate = positionHireDateField.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		}
+
+		// build map
 		Map<RegistrationField, String> enteredData = new HashMap<RegistrationField, String>();
-		enteredData.put(RegistrationField.FIRSTNAME, firstNameTextField.getValue());
-		enteredData.put(RegistrationField.LASTNAME, lastNameTextField.getValue());
-		enteredData.put(RegistrationField.BIRTHDATE,
-				birthdayDateField.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-		enteredData.put(RegistrationField.ADDRESS, addressTextField.getValue());
-		enteredData.put(RegistrationField.POSTALCODE, postalCodeTextField.getValue());
-		enteredData.put(RegistrationField.CITY, cityTextField.getValue());
-		enteredData.put(RegistrationField.GENDER, genderSelect.getSelectedItem().get());
-		enteredData.put(RegistrationField.EMAIL, emailTextField.getValue());
-		enteredData.put(RegistrationField.NOTIFICATION_EMAIL, notificationEmailTextField.getValue());
-		enteredData.put(RegistrationField.PASSWORD, passwordField.getValue());
-		enteredData.put(RegistrationField.POSITION, positionSelect.getSelectedItem().get());
-		enteredData.put(RegistrationField.HIREDATE,
-				positionHireDateField.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+		enteredData.put(RegistrationField.FIRSTNAME, firstname);
+		enteredData.put(RegistrationField.LASTNAME, lastname);
+		enteredData.put(RegistrationField.BIRTHDATE, birthday);
+		enteredData.put(RegistrationField.ADDRESS, address);
+		enteredData.put(RegistrationField.POSTALCODE, postalcode);
+		enteredData.put(RegistrationField.CITY, city);
+		enteredData.put(RegistrationField.GENDER, gender);
+		enteredData.put(RegistrationField.EMAIL, email);
+		enteredData.put(RegistrationField.NOTIFICATION_EMAIL, notiemail);
+		enteredData.put(RegistrationField.PASSWORD, password);
+		enteredData.put(RegistrationField.POSITION, position);
+		enteredData.put(RegistrationField.HIREDATE, hiredate);
 		return enteredData;
 	}
 
+	/*
+	 * ClickListener - callback method: persists entered data
+	 * 
+	 */
 	@Override
 	public void buttonClick(ClickEvent event) {
 		Map<RegistrationField, String> enteredData = getEnteredData();
-
-		if(!epm.registerUser(enteredData)){
+		// persist map
+		if (!epm.registerUser(enteredData)) {
 			Notification.show("Benutzername existiert bereits.", Notification.Type.ERROR_MESSAGE);
 		} else {
-			Notification.show("Benutzer erfolgreich erstellt.",Notification.Type.TRAY_NOTIFICATION);
+			Notification.show("Benutzer erfolgreich erstellt.", Notification.Type.TRAY_NOTIFICATION);
 		}
-		// persist map
 
 	}
 

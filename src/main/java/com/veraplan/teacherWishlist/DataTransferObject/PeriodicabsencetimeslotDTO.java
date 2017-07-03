@@ -2,6 +2,11 @@ package com.veraplan.teacherWishlist.DataTransferObject;
 
 import java.io.Serializable;
 
+/**
+ * The data transfer class for the Periodicabsencetimeslot entity.
+ * 
+ * @author Lukas Stuckstette 
+ */
 public class PeriodicabsencetimeslotDTO implements Serializable {
 
 	/**

@@ -3,6 +3,11 @@ package com.veraplan.teacherWishlist.DataTransferObject;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * The data transfer class for the Absence entity.
+ * 
+ * @author Lukas Stuckstette 
+ */
 public class AbsenceDTO implements Serializable {
 
 	/**

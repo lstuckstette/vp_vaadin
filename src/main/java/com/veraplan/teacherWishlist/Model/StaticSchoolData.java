@@ -1,7 +1,14 @@
 package com.veraplan.teacherWishlist.Model;
 
+/**
+ * StaticSchoolData contains information about the school
+ * @author Lukas Stuckstette
+ */
 public class StaticSchoolData {
 
+	/**
+	 * public field containing the maximal number of daily timeslots
+	 */
 	public static final int TIMESLOT_COUNT = 9;
 
 	private StaticSchoolData() {
@@ -9,6 +16,10 @@ public class StaticSchoolData {
 	}
 	// src: http://www.hhg-du.de/Stundenplanzeiten.188.0.html
 
+	/**
+	 * @param timeSlotNumber timeslot number
+	 * @return returns a specific  start time of given timeslot number
+	 */
 	public static TimeSlotTime getTimeSlotStartTime(int timeSlotNumber) {
 		switch (timeSlotNumber) {
 		case 1:
@@ -37,6 +48,10 @@ public class StaticSchoolData {
 
 	}
 
+	/**
+	 * @param timeSlotNumber timeslot number
+	 * @return returns a specific  end time of given timeslot number
+	 */
 	public static TimeSlotTime getTimeSlotEndTime(int timeSlotNumber) {
 		switch (timeSlotNumber) {
 		case 1:
@@ -65,6 +80,10 @@ public class StaticSchoolData {
 
 	}
 
+	/**
+	 * @param timeSlotNumber timeslot number
+	 * @return returns a string representing the start and end time of given timeslot number
+	 */
 	public static String getTimeString(int timeSlotNumber) {
 		if(timeSlotNumber > TIMESLOT_COUNT || timeSlotNumber < 1){
 			return "error on TimeSlot.";
